@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">CareFeed</string>
+    <string name="hint_email_address">Email Address</string>
+    <string name="hint_password">Password</string>
+    <string name="btn_login_text">Login</string>
+    <string name="text_register">Click here to register</string>
+    <string name="registration_title">Register a new account</string>
+    <string name="btn_register">Register</string>
+    <string name="hint_username">Username</string>
+    <string name="text_login"><u>Back to login</u></string>
+    <string name="text_help">If you need help, please contact our customer service.</string>
+    <string name="btn_confirm">Confirm</string>
+    <string name="txt_forget_password">Forget Password?</string>
+    <string name="hint_confirm_password">Confirm Password</string>
+</resources>

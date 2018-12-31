@@ -1,0 +1,115 @@
+{
+  "project_info": {
+    "project_number": "175145102294",
+    "firebase_url": "https://carefeed-cbd18.firebaseio.com",
+    "project_id": "carefeed-cbd18",
+    "storage_bucket": "carefeed-cbd18.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:175145102294:android:ab012a6ddfacf951",
+        "android_client_info": {
+          "package_name": "com.carefeed.android.carefeed"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "175145102294-gdkt0rtnbi5vud2im3oh2dia5u73tmsg.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.carefeed.android.carefeed",
+            "certificate_hash": "fcc99a1317ef15317c1b73b46b7600fb4da3e14a"
+          }
+        },
+        {
+          "client_id": "175145102294-q8av1ic0vbj5otugk1nq8cp38q80rc98.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC3QW_HV1CbpQPveXGOP5YYxynxNYLIrtc"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "175145102294-q8av1ic0vbj5otugk1nq8cp38q80rc98.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:175145102294:android:39d6ef9ae1cc68e3",
+        "android_client_info": {
+          "package_name": "com.taruc.carefeed"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "175145102294-dadc7mv0d1njrtshct4gl01edu27s3s5.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.taruc.carefeed",
+            "certificate_hash": "f828fe1190412620d7054b0cbad3cfa1e80ff811"
+          }
+        },
+        {
+          "client_id": "175145102294-27qlqa5kmhulk5c5nms99482ok3c2468.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.taruc.carefeed",
+            "certificate_hash": "a918dfe00f0d7d7b5fd28b7df6eeece463f459c8"
+          }
+        },
+        {
+          "client_id": "175145102294-5fn70260va0p1fhq0ol1mqbs23kpsdli.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.taruc.carefeed",
+            "certificate_hash": "fcc99a1317ef15317c1b73b46b7600fb4da3e14a"
+          }
+        },
+        {
+          "client_id": "175145102294-q8av1ic0vbj5otugk1nq8cp38q80rc98.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC3QW_HV1CbpQPveXGOP5YYxynxNYLIrtc"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "175145102294-q8av1ic0vbj5otugk1nq8cp38q80rc98.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
