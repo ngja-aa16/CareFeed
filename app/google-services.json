@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "175145102294-8fhrivunh98dkse1d5piiunkcocasp6l.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.carefeed.android.carefeed",
+            "certificate_hash": "f828fe1190412620d7054b0cbad3cfa1e80ff811"
+          }
+        },
+        {
           "client_id": "175145102294-gdkt0rtnbi5vud2im3oh2dia5u73tmsg.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {

@@ -1,9 +1,15 @@
 package com.carefeed.android.carefeed;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Handler;
+import android.support.annotation.NonNull;
+import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -21,31 +27,53 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Target;
 
 public class MainActivity extends AppCompatActivity {
 
+    boolean doubleBackToExitPressedOnce = false;
     private Toolbar topToolbar;
-    private ViewPager myViewPager;
-    private TabLayout myTabLayout;
-    private TabsAccessorAdapter myTabsAccessorAdapter;
+    private BottomNavigationView bottomNav;
     private FirebaseAuth mAuth;
-    private DatabaseReference rootRef, userNameRef;
+    private DatabaseReference rootRef;
+    private BottomNavigationView.OnNavigationItemSelectedListener navListener = new BottomNavigationView.OnNavigationItemSelectedListener() {
+        @Override
+        public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+            Fragment selectedFragment = null;
+
+            switch (menuItem.getItemId()){
+                case R.id.menu_bottom_home:
+                    selectedFragment = new HomeFragment();
+                    getSupportActionBar().setTitle("Carefeeds");
+                    break;
+                case R.id.menu_bottom_posts:
+                    selectedFragment = new PostsFragment();
+                    getSupportActionBar().setTitle("Posts");
+                    break;
+                case R.id.menu_bottom_chats:
+                    selectedFragment = new ChatsFragment();
+                    getSupportActionBar().setTitle("Chats");
+                    break;
+            }
+            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, selectedFragment).commit();
+            return true;
+        }
+    };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_main);
 
-        topToolbar = findViewById(R.id.main_app_bar);
+        topToolbar = (Toolbar) findViewById(R.id.main_app_bar);
         setSupportActionBar(topToolbar);
         getSupportActionBar().setTitle("Carefeeds");
 
-        myViewPager = findViewById(R.id.main_tabs_pager);
-        myTabsAccessorAdapter = new TabsAccessorAdapter(getSupportFragmentManager());
-        myViewPager.setAdapter(myTabsAccessorAdapter);
-
-        myTabLayout = findViewById(R.id.main_tabs);
-        myTabLayout.setupWithViewPager(myViewPager);
+        bottomNav = (BottomNavigationView) findViewById(R.id.bottom_navi_bar);
+        bottomNav.setOnNavigationItemSelectedListener(navListener);
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new HomeFragment()).commit();
 
         mAuth = FirebaseAuth.getInstance();
         rootRef = FirebaseDatabase.getInstance().getReference();
@@ -55,6 +83,7 @@ public class MainActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater infalter = getMenuInflater();
         infalter.inflate(R.menu.options_menu, menu);
+
         return true;
     }
 
@@ -84,38 +113,34 @@ public class MainActivity extends AppCompatActivity {
     public void onStart() {
         super.onStart();
         // Check if user is signed in (non-null) and update UI accordingly.
-        FirebaseUser currentUser = mAuth.getCurrentUser();
 
-        if(currentUser == null){
+        if(mAuth.getCurrentUser() == null){
             Intent intent = new Intent(this, LoginActivity.class);
             startActivity(intent);
             finish();
         } else{
-            userNameRef = rootRef.child("User_Info").child(mAuth.getCurrentUser().getUid());
+
             //check if user first time login
-
-            ValueEventListener eventListener = new ValueEventListener() {
+            DatabaseReference userNameRef = rootRef.child("User_Info").child(mAuth.getCurrentUser().getUid()).child("username");
+            userNameRef.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-                    if(!dataSnapshot.exists()) {
-                        Intent intent = new Intent(MainActivity.this, CreateProfileActivity.class);
-                        finish();
-                        startActivity(intent);
-                    }
-                }
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            if(!dataSnapshot.exists()) {
+                                Intent intent = new Intent(MainActivity.this, CreateProfileActivity.class);
+                                finish();
+                                startActivity(intent);
+                            }
+                        }
 
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
-                    Toast.makeText(MainActivity.this, "Opps! Error Occurred.",
-                            Toast.LENGTH_SHORT).show();
-                    onRestart();
-                }
-            };
-            userNameRef.addListenerForSingleValueEvent(eventListener);
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+                            Toast.makeText(MainActivity.this, "Opps! Error Occurred.",
+                                    Toast.LENGTH_SHORT).show();
+                            onRestart();
+                        }
+                    });
         }
     }
-
-    boolean doubleBackToExitPressedOnce = false;
 
     @Override
     public void onBackPressed() {

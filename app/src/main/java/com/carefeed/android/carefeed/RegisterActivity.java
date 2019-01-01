@@ -27,7 +27,7 @@ public class RegisterActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.layout_register);
 
-        mProgressBar = findViewById(R.id.register_progress_bar);
+        mProgressBar = (ProgressBar) findViewById(R.id.register_progress_bar);
         mEmail = (EditText) findViewById(R.id.register_email);
         mPassword = (EditText) findViewById(R.id.register_password);
         mConfirmPassword = (EditText) findViewById(R.id.register_confirm_password);

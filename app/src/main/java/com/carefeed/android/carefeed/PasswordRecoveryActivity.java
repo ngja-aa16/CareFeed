@@ -18,7 +18,7 @@ public class PasswordRecoveryActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.layout_password_recovery);
 
-        mProgressBar = findViewById(R.id.recovery_progress_bar);
+        mProgressBar = (ProgressBar) findViewById(R.id.recovery_progress_bar);
         mEmail = (EditText) findViewById(R.id.recovery_email);
 
         mProgressBar.setVisibility(View.GONE);
