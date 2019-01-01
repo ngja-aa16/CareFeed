@@ -2,13 +2,13 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <item
+    <!--<item
     android:title="Profile"
     android:id="@+id/menu_profile"
     app:showAsAction="ifRoom"
         android:icon="@drawable/profile_icon">
 
-    </item>
+    </item>-->
 
     <item
         android:title="Setting"

@@ -15,7 +15,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".MainActivity">
+        <activity android:name=".MainActivity"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -23,18 +24,22 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".LoginActivity"/>
-        <activity android:name=".CreateProfileActivity"/>
+        <activity android:name=".LoginActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".CreateProfileActivity"
+            android:screenOrientation="portrait"/>
 
         <activity android:name=".RegisterActivity"
-            android:parentActivityName=".LoginActivity">
+            android:parentActivityName=".LoginActivity"
+            android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.carefeed.android.carefeed.LoginActivity" />
         </activity>
 
         <activity android:name=".PasswordRecoveryActivity"
-            android:parentActivityName=".LoginActivity">
+            android:parentActivityName=".LoginActivity"
+            android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.carefeed.android.carefeed.LoginActivity" />

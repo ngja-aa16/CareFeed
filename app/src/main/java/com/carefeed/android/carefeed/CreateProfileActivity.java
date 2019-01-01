@@ -65,7 +65,6 @@ public class CreateProfileActivity extends AppCompatActivity {
         profileImage = (CircleImageView) findViewById(R.id.cProfile_picture);
         loadingBar = new ProgressDialog(this);
 
-
         mAuth = FirebaseAuth.getInstance();
         currentUserID = mAuth.getCurrentUser().getUid();
         mStorage = FirebaseStorage.getInstance().getReference().child("profile_images");

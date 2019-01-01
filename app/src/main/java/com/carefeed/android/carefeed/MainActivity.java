@@ -1,5 +1,6 @@
 package com.carefeed.android.carefeed;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
@@ -29,6 +30,10 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
+import com.squareup.picasso.Transformation;
+
+import de.hdodenhof.circleimageview.CircleImageView;
+import jp.wasabeef.picasso.transformations.CropCircleTransformation;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -37,6 +42,7 @@ public class MainActivity extends AppCompatActivity {
     private BottomNavigationView bottomNav;
     private FirebaseAuth mAuth;
     private DatabaseReference rootRef;
+    private ProgressDialog loadingBar;
     private BottomNavigationView.OnNavigationItemSelectedListener navListener = new BottomNavigationView.OnNavigationItemSelectedListener() {
         @Override
         public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
@@ -67,9 +73,14 @@ public class MainActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_main);
 
+        loadingBar = new ProgressDialog(this);
+
         topToolbar = (Toolbar) findViewById(R.id.main_app_bar);
         setSupportActionBar(topToolbar);
         getSupportActionBar().setTitle("Carefeeds");
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeAsUpIndicator(resizedProfileIcon());
 
         bottomNav = (BottomNavigationView) findViewById(R.id.bottom_navi_bar);
         bottomNav.setOnNavigationItemSelectedListener(navListener);
@@ -77,6 +88,15 @@ public class MainActivity extends AppCompatActivity {
 
         mAuth = FirebaseAuth.getInstance();
         rootRef = FirebaseDatabase.getInstance().getReference();
+
+        loadingBar.setTitle("Fetching data...");
+        loadingBar.setMessage("Please wait, while the server is fetching your information");
+        loadingBar.show();
+        loadingBar.setCancelable(false);
+
+        if(mAuth.getCurrentUser() != null){
+            ChangeUserProfileImage();
+        }
     }
 
     @Override
@@ -90,7 +110,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch(item.getItemId()){
-            case R.id.menu_profile:
+            case android.R.id.home:
                 Toast.makeText(this, "Profile", Toast.LENGTH_SHORT).show();
                 return true;
             case R.id.menu_setting:
@@ -112,6 +132,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onStart() {
         super.onStart();
+
         // Check if user is signed in (non-null) and update UI accordingly.
 
         if(mAuth.getCurrentUser() == null){
@@ -124,8 +145,10 @@ public class MainActivity extends AppCompatActivity {
             DatabaseReference userNameRef = rootRef.child("User_Info").child(mAuth.getCurrentUser().getUid()).child("username");
             userNameRef.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
-                        public void onDataChange(DataSnapshot dataSnapshot) {
-                            if(!dataSnapshot.exists()) {
+                    public void onDataChange(DataSnapshot dataSnapshot) {               //dataSnapshot for username
+                            if(!dataSnapshot.exists()) {                                //If users do not has a username ((haven't create profile
+                                loadingBar.dismiss();
+                                Toast.makeText(MainActivity.this,"Please create profile to procced",Toast.LENGTH_SHORT).show();
                                 Intent intent = new Intent(MainActivity.this, CreateProfileActivity.class);
                                 finish();
                                 startActivity(intent);
@@ -139,6 +162,47 @@ public class MainActivity extends AppCompatActivity {
                             onRestart();
                         }
                     });
+        }
+    }
+
+    private void ChangeUserProfileImage() {
+        DatabaseReference profileImageRef = rootRef.child("User_Info").child(mAuth.getCurrentUser().getUid()).child("profile_image");
+        if(profileImageRef != null){
+            profileImageRef.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    if(dataSnapshot.getValue() != null){
+                        String image = dataSnapshot.getValue().toString();
+                        Picasso.get()
+                                .load(image).transform(new CropCircleTransformation()).resize(100, 100)
+                                .into(new Target()
+                                {
+                                    @Override
+                                    public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from)
+                                    {
+                                        loadingBar.dismiss();
+                                        Drawable d = new BitmapDrawable(getResources(), bitmap);
+                                        getSupportActionBar().setHomeAsUpIndicator(d);
+                                    }
+
+                                    @Override
+                                    public void onBitmapFailed(Exception e, Drawable errorDrawable) {
+
+                                    }
+
+                                    @Override
+                                    public void onPrepareLoad(Drawable placeHolderDrawable)
+                                    {
+                                    }
+                                });
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                }
+            });
         }
     }
 
@@ -158,5 +222,12 @@ public class MainActivity extends AppCompatActivity {
                 doubleBackToExitPressedOnce=false;
             }
         }, 2000);
+    }
+
+    private Drawable resizedProfileIcon(){
+        Drawable drawable= getResources().getDrawable(R.drawable.profile_icon);
+        Bitmap bitmap = ((BitmapDrawable) drawable).getBitmap();
+        Drawable newdrawable = new BitmapDrawable(getResources(), Bitmap.createScaledBitmap(bitmap, 40, 40, true));
+        return newdrawable;
     }
 }
