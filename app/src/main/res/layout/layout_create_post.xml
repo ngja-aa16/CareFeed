@@ -24,16 +24,6 @@
         android:src="@drawable/select_image"
         android:background="@color/white" />
 
-    <EditText
-        android:id="@+id/post_title_text"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/upload_image_button"
-        android:layout_margin="15dp"
-        android:hint="Title"
-        android:inputType="text"
-        android:background="@android:color/transparent"/>
-
     <View
         android:id="@+id/SplitLine_hor1"
         android:layout_width="match_parent"

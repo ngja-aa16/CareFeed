@@ -96,21 +96,27 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
-        public boolean onOptionsItemSelected(MenuItem item) {
-            switch(item.getItemId()){
-                case android.R.id.home:
-                    Toast.makeText(this, "Profile", Toast.LENGTH_SHORT).show();
-                    return true;
-                case R.id.menu_setting:
-                    Toast.makeText(this, "Setting", Toast.LENGTH_SHORT).show();
-                    return true;
-                case R.id.menu_logout:
-                    Toast.makeText(this, "Logout", Toast.LENGTH_SHORT).show();
-                    logOut();
-                    return true;
-                default:
-                    return super.onOptionsItemSelected(item);
-            }
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        Intent intent;
+        switch(item.getItemId()){
+            case android.R.id.home:
+                Toast.makeText(this, "Profile", Toast.LENGTH_SHORT).show();
+                intent = new Intent(MainActivity.this, ProfileActivity.class);
+                startActivity(intent);
+                return true;
+            case R.id.menu_setting:
+                Toast.makeText(this, "Setting", Toast.LENGTH_SHORT).show();
+                intent = new Intent(MainActivity.this, ChangePasswordActivity.class);
+                startActivity(intent);
+                return true;
+            case R.id.menu_logout:
+                Toast.makeText(this, "Logout", Toast.LENGTH_SHORT).show();
+                logOut();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     private void logOut() {
@@ -161,30 +167,30 @@ public class MainActivity extends AppCompatActivity {
             //check if user first time login
             userRef.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {               //dataSnapshot for username
-                            if(!dataSnapshot.hasChild("username")) {                                //If users do not has a username ((haven't create profile
-                                Toast.makeText(MainActivity.this,"Please create profile to procced",Toast.LENGTH_SHORT).show();
-                                Intent intent = new Intent(MainActivity.this, CreateProfileActivity.class);
-                                loadingBar.dismiss();
-                                finish();
-                                startActivity(intent);
-                            } else {
-                                if(dataSnapshot.hasChild("profile_image")){
-                                    ChangeUserProfileImage(true);
-                                } else {
-                                    ChangeUserProfileImage(false);
-                                }
-                                Toast.makeText(MainActivity.this, "Welcome back, " + dataSnapshot.child("username").getValue().toString(), Toast.LENGTH_SHORT).show();
-                            }
+                public void onDataChange(DataSnapshot dataSnapshot) {               //dataSnapshot for username
+                    if(!dataSnapshot.hasChild("username")) {                                //If users do not has a username ((haven't create profile
+                        Toast.makeText(MainActivity.this,"Please create profile to procced",Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(MainActivity.this, CreateProfileActivity.class);
+                        loadingBar.dismiss();
+                        finish();
+                        startActivity(intent);
+                    } else {
+                        if(dataSnapshot.hasChild("profile_image")){
+                            ChangeUserProfileImage(true);
+                        } else {
+                            ChangeUserProfileImage(false);
                         }
+                        Toast.makeText(MainActivity.this, "Welcome back, " + dataSnapshot.child("username").getValue().toString(), Toast.LENGTH_SHORT).show();
+                    }
+                }
 
-                        @Override
-                        public void onCancelled(DatabaseError databaseError) {
-                            Toast.makeText(MainActivity.this, "Opps! Error Occurred.",
-                                    Toast.LENGTH_SHORT).show();
-                            onRestart();
-                        }
-                    });
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+                    Toast.makeText(MainActivity.this, "Opps! Error Occurred.",
+                            Toast.LENGTH_SHORT).show();
+                    onRestart();
+                }
+            });
         }
     }
 
