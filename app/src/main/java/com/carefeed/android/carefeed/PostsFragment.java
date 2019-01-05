@@ -92,14 +92,10 @@ public class PostsFragment extends Fragment {
                         String time = dataSnapshot.child("time").getValue().toString();
                         String description = dataSnapshot.child("description").getValue().toString();
                         String postImage = dataSnapshot.child("post_image").getValue().toString();
-                        String title = dataSnapshot.child("title").getValue().toString();
 
                         holder.dateTime.setText(date + " " + time);
                         holder.postDescription.setText(description);
                         Picasso.get().load(postImage).into(holder.postImage);
-                        holder.postTitle.setText(title);
-
-                        Log.d("postRef","postRef" + title);
 
                         userRef.child(userID).addValueEventListener(new ValueEventListener() {
                             @Override
@@ -145,7 +141,7 @@ public class PostsFragment extends Fragment {
     public static class PostViewHolder extends RecyclerView.ViewHolder{
 
         CircleImageView profileImage;
-        TextView profileUsername, dateTime, postTitle, postDescription;
+        TextView profileUsername, dateTime, postDescription;
         ImageView postImage;
 
         public PostViewHolder(View itemView){
@@ -153,7 +149,6 @@ public class PostsFragment extends Fragment {
             profileImage = itemView.findViewById(R.id.view_post_profile_image);
             profileUsername = itemView.findViewById(R.id.view_post_username);
             dateTime = itemView.findViewById(R.id.view_post_date_time);
-            postTitle = itemView.findViewById(R.id.view_post_title);
             postDescription = itemView.findViewById(R.id.view_post_description);
             postImage = itemView.findViewById(R.id.view_post_image);
         }

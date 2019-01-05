@@ -4,10 +4,11 @@
     android:layout_height="match_parent">
 
     <LinearLayout
+        android:id="@+id/login_template"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:paddingTop="80dp"
+        android:paddingTop="100dp"
         android:paddingLeft="20dp"
         android:paddingRight="20dp"
         >
@@ -16,7 +17,7 @@
             android:layout_width="wrap_content"
             android:layout_height="100dp"
             android:src="@drawable/carefeed_logo"
-            android:layout_marginBottom="30dp"
+            android:layout_marginBottom="20dp"
             />
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
@@ -65,7 +66,7 @@
             android:background="@drawable/white_rounded_button"
             android:padding="12dp"
             android:layout_marginBottom="8dp"
-            android:layout_marginTop="40dp"
+            android:layout_marginTop="30dp"
             />
 
         <TextView
@@ -79,6 +80,31 @@
             android:textSize="18sp"
             android:layout_marginTop="8dp"
             android:onClick="register_onClick"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:layout_marginBottom="15dp"
+            android:text="or login with"
+            android:gravity="center"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/login_template"
+        android:orientation="horizontal"
+        android:layout_marginTop="20dp">
+
+        <ImageView
+            android:id="@+id/google_sign_in_image"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:src="@drawable/google"
+            android:layout_weight="1"
+            />
+
     </LinearLayout>
     
     <ProgressBar

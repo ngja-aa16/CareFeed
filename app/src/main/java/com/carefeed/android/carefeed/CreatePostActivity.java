@@ -32,6 +32,7 @@ import com.google.firebase.storage.UploadTask;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.Locale;
 
 
 public class CreatePostActivity extends AppCompatActivity {
@@ -47,7 +48,7 @@ public class CreatePostActivity extends AppCompatActivity {
     private StorageReference postImagesReference;
 
     private static final int GALLERY_PICK = 1;
-    private String downloadUrl, currentUserId, currentDateString, currentTimeString, postTitle, postDescription;
+    private String downloadUrl, currentUserId, currentDateString, currentTimeString, postDescription;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -95,12 +96,9 @@ public class CreatePostActivity extends AppCompatActivity {
     }
 
     private void validateInputs(){
-        postTitle = postTitleText.getText().toString();
         postDescription = postDescriptionText.getText().toString();
         if(imageUri == null){
             Toast.makeText(this, "Please insert an image", Toast.LENGTH_SHORT).show();
-        } else if(TextUtils.isEmpty(postTitle)){
-            Toast.makeText(this, "Please insert a title for the post", Toast.LENGTH_SHORT).show();
         } else if(TextUtils.isEmpty(postDescription)){
             Toast.makeText(this, "Please insert a description for the post", Toast.LENGTH_SHORT).show();
         } else {
@@ -110,11 +108,11 @@ public class CreatePostActivity extends AppCompatActivity {
     }
 
     private void StoreImageToFirebase() {
-        Calendar calDate = Calendar.getInstance();
+        Calendar calDate = Calendar.getInstance(Locale.ENGLISH);
         SimpleDateFormat currentDate = new SimpleDateFormat("dd-MMM-yyyy");
         currentDateString = currentDate.format(calDate.getTime());
 
-        Calendar calTime = Calendar.getInstance();
+        Calendar calTime = Calendar.getInstance(Locale.ENGLISH);
         SimpleDateFormat currentTime = new SimpleDateFormat("HH:mm");
         currentTimeString = currentTime.format(calTime.getTime());
 
@@ -150,7 +148,6 @@ public class CreatePostActivity extends AppCompatActivity {
                     postsMap.put("userID", currentUserId);
                     postsMap.put("date", currentDateString);
                     postsMap.put("time", currentTimeString);
-                    postsMap.put("title", postTitle);
                     postsMap.put("description", postDescription);
                     postsMap.put("post_image", downloadUrl);
 
@@ -184,6 +181,9 @@ public class CreatePostActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch(item.getItemId()){
+            case android.R.id.home:
+                finish();
+                return true;
             case Menu.FIRST:
                 validateInputs();
                 return true;
