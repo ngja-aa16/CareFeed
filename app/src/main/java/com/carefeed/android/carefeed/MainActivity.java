@@ -1,27 +1,29 @@
 package com.carefeed.android.carefeed;
 
+import android.annotation.SuppressLint;
+import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.Snackbar;
-import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
-import android.support.v4.view.ViewPager;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -30,13 +32,17 @@ import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
+import jp.wasabeef.picasso.transformations.CropCircleTransformation;
+
 public class MainActivity extends AppCompatActivity {
 
     boolean doubleBackToExitPressedOnce = false;
     private Toolbar topToolbar;
     private BottomNavigationView bottomNav;
     private FirebaseAuth mAuth;
-    private DatabaseReference rootRef;
+    private DatabaseReference userRef;
+    private ProgressDialog loadingBar;
+    private String currentUserID;
     private BottomNavigationView.OnNavigationItemSelectedListener navListener = new BottomNavigationView.OnNavigationItemSelectedListener() {
         @Override
         public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
@@ -67,7 +73,9 @@ public class MainActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_main);
 
-        topToolbar = (Toolbar) findViewById(R.id.main_app_bar);
+        loadingBar = new ProgressDialog(this);
+
+        topToolbar = (Toolbar) findViewById(R.id.main_page_toolbar);
         setSupportActionBar(topToolbar);
         getSupportActionBar().setTitle("Carefeeds");
 
@@ -76,7 +84,7 @@ public class MainActivity extends AppCompatActivity {
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new HomeFragment()).commit();
 
         mAuth = FirebaseAuth.getInstance();
-        rootRef = FirebaseDatabase.getInstance().getReference();
+        retrieveInfoFromDatabase();
     }
 
     @Override
@@ -89,56 +97,147 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+
+        Intent intent;
         switch(item.getItemId()){
-            case R.id.menu_profile:
+            case android.R.id.home:
                 Toast.makeText(this, "Profile", Toast.LENGTH_SHORT).show();
+                intent = new Intent(MainActivity.this, ProfileActivity.class);
+                startActivity(intent);
                 return true;
             case R.id.menu_setting:
                 Toast.makeText(this, "Setting", Toast.LENGTH_SHORT).show();
+                intent = new Intent(MainActivity.this, ChangePasswordActivity.class);
+                startActivity(intent);
                 return true;
             case R.id.menu_logout:
                 Toast.makeText(this, "Logout", Toast.LENGTH_SHORT).show();
-                mAuth.signOut();
-                finish();
-                Intent intent = new Intent(this, LoginActivity.class);
-                startActivity(intent);
+                logOut();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
     }
 
+    private void logOut() {
+        mAuth.signOut();
+        finish();
+        Intent intent = new Intent(this, LoginActivity.class);
+        startActivity(intent);
+    }
+
     // ---------------------- Firebase -----------------------
-    @Override
-    public void onStart() {
-        super.onStart();
+    public void retrieveInfoFromDatabase() {
+
+        loadingBar.setTitle("Fetching data...");
+        loadingBar.setMessage("Please wait, while the server is fetching your information");
+        loadingBar.show();
+        loadingBar.setCancelable(false);
+
+        @SuppressLint("HandlerLeak") final Handler h = new Handler() {
+            @Override
+            public void handleMessage(Message message) {
+                if(loadingBar.isShowing()){
+                    loadingBar.dismiss();
+                    AlertDialog connectionFailDialog = new AlertDialog.Builder(MainActivity.this)
+                            .setTitle("Connection to server failed!")
+                            .setMessage("Please make sure the device is connected to internet.")
+                            .setPositiveButton("Try Again", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    recreate();
+                                }
+                            })
+                            .setIcon(android.R.drawable.ic_dialog_alert)
+                            .show();
+                }
+            }
+        };
+        h.sendMessageDelayed(new Message(), 10000);
+
         // Check if user is signed in (non-null) and update UI accordingly.
 
         if(mAuth.getCurrentUser() == null){
+            loadingBar.dismiss();
             Intent intent = new Intent(this, LoginActivity.class);
             startActivity(intent);
             finish();
         } else{
-
+            currentUserID = mAuth.getCurrentUser().getUid();
+            userRef = FirebaseDatabase.getInstance().getReference().child("User_Info").child(currentUserID);
             //check if user first time login
-            DatabaseReference userNameRef = rootRef.child("User_Info").child(mAuth.getCurrentUser().getUid()).child("username");
-            userNameRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            userRef.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
-                        public void onDataChange(DataSnapshot dataSnapshot) {
-                            if(!dataSnapshot.exists()) {
-                                Intent intent = new Intent(MainActivity.this, CreateProfileActivity.class);
-                                finish();
-                                startActivity(intent);
-                            }
+                public void onDataChange(DataSnapshot dataSnapshot) {               //dataSnapshot for username
+                    if(!dataSnapshot.hasChild("username")) {                                //If users do not has a username ((haven't create profile
+                        Toast.makeText(MainActivity.this,"Please create profile to procced",Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(MainActivity.this, CreateProfileActivity.class);
+                        loadingBar.dismiss();
+                        finish();
+                        startActivity(intent);
+                    } else {
+                        if(dataSnapshot.hasChild("profile_image")){
+                            ChangeUserProfileImage(true);
+                        } else {
+                            ChangeUserProfileImage(false);
                         }
+                        Toast.makeText(MainActivity.this, "Welcome back, " + dataSnapshot.child("username").getValue().toString(), Toast.LENGTH_SHORT).show();
+                    }
+                }
 
-                        @Override
-                        public void onCancelled(DatabaseError databaseError) {
-                            Toast.makeText(MainActivity.this, "Opps! Error Occurred.",
-                                    Toast.LENGTH_SHORT).show();
-                            onRestart();
-                        }
-                    });
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+                    Toast.makeText(MainActivity.this, "Opps! Error Occurred.",
+                            Toast.LENGTH_SHORT).show();
+                    onRestart();
+                }
+            });
+        }
+    }
+
+    private void ChangeUserProfileImage(boolean hasImage) {
+        final Target homeIndicatorTarget = new Target() {
+            @Override
+            public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom loadedFrom) {
+                Log.d("DEBUG", "onBitmapLoaded");
+                Drawable d = new BitmapDrawable(getResources(), bitmap);
+                getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+                getSupportActionBar().setHomeAsUpIndicator(d);
+            }
+
+            @Override
+            public void onBitmapFailed(Exception e, Drawable drawable) {
+                Log.d("DEBUG", "onBitmapFailed");
+            }
+
+            @Override
+            public void onPrepareLoad(Drawable drawable) {
+                Log.d("DEBUG", "onPrepareLoad");
+            }
+        };
+
+        if(hasImage){
+            DatabaseReference profileImageRef = userRef.child("profile_image");
+            profileImageRef.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    if(dataSnapshot.getValue() != null){
+                        String image = dataSnapshot.getValue().toString();
+
+                        Picasso.get()
+                                .load(image).transform(new CropCircleTransformation()).resize(100, 100).centerCrop()
+                                .into(homeIndicatorTarget);
+                        loadingBar.dismiss();
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                }
+            });
+        } else {
+            Picasso.get().load(R.drawable.profile).transform(new CropCircleTransformation()).resize(100, 100).centerCrop().into(homeIndicatorTarget);
+            loadingBar.dismiss();
         }
     }
 

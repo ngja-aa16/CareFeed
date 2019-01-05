@@ -12,4 +12,11 @@
     <string name="btn_confirm">Confirm</string>
     <string name="txt_forget_password">Forget Password?</string>
     <string name="hint_confirm_password">Confirm Password</string>
+    <string name="text_change_image"><u>Change</u></string>
+    <string name="password_pattern">(?=^.{8,}$)((?=.*\\d)|(?=.*\\W+))(?![.\\n])((?=.*[A-Z])|(?=.*[a-z])).*$</string>
+    <string name="password_hint"><![CDATA[Use 8 or more characters with a mix of letters & numbers]]></string>
+    <string name="hint_new_password">New Password</string>
+    <string name="new_password_hint">Incorrect password.</string>
+    <string name="hint_old_password">Old Password</string>
+    <string name="txt_incorrect_password">Incorrect Password</string>
 </resources>

@@ -1,13 +1,17 @@
 package com.carefeed.android.carefeed;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -16,10 +20,14 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 public class RegisterActivity extends AppCompatActivity {
 
     private ProgressBar mProgressBar;
     private EditText mEmail, mPassword, mConfirmPassword;
+    private TextView mValidPassword, mPasswordMatch;
     private FirebaseAuth mAuth;
 
     @Override
@@ -31,10 +39,12 @@ public class RegisterActivity extends AppCompatActivity {
         mEmail = (EditText) findViewById(R.id.register_email);
         mPassword = (EditText) findViewById(R.id.register_password);
         mConfirmPassword = (EditText) findViewById(R.id.register_confirm_password);
+        mValidPassword = (TextView) findViewById(R.id.password_hint);
+        mPasswordMatch = (TextView) findViewById(R.id.password_match_hint);
         mAuth = FirebaseAuth.getInstance();
 
         mProgressBar.setVisibility(View.GONE);
-        init();
+        registerOnClick();
     }
 
     //check string if null
@@ -55,6 +65,7 @@ public class RegisterActivity extends AppCompatActivity {
             return false;
         }
         else if(!checkPasswordMatch(password, confirmPassword)){
+            Toast.makeText(RegisterActivity.this, "Password does not match", Toast.LENGTH_SHORT).show();
             return false;
         }
         else
@@ -74,15 +85,66 @@ public class RegisterActivity extends AppCompatActivity {
     // check password match
     private boolean checkPasswordMatch(String password, String confirmPassword){
         if(!password.equals(confirmPassword)) {
-            Toast.makeText(RegisterActivity.this, "Password does not match", Toast.LENGTH_SHORT).show();
             return false;
         }
         else
             return true;
     }
 
+    private boolean passwordPattern(String password){
+        Pattern pattern;
+        Matcher matcher;
+        final String pw_pattern = getString(R.string.password_pattern);
+        pattern = Pattern.compile(pw_pattern);
+        matcher = pattern.matcher(password);
+
+        return matcher.matches();
+    }
+
     // register button onClick event
-    private void init(){
+    private void registerOnClick(){
+        mPassword.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
+
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+                    if(!passwordPattern(mPassword.getText().toString())){
+                    mValidPassword.setVisibility(View.VISIBLE);
+                    mValidPassword.setText("Invalid password.");
+                    mValidPassword.setTextColor(Color.RED);
+                } else{
+                    mValidPassword.setVisibility(View.GONE);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if(checkPasswordMatch(mPassword.getText().toString(), mConfirmPassword.getText().toString())){
+                    mPasswordMatch.setVisibility(View.GONE);
+                } else{
+                    mPasswordMatch.setVisibility(View.VISIBLE);
+                }
+            }
+        });
+
+        mConfirmPassword.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if(checkPasswordMatch(mPassword.getText().toString(), mConfirmPassword.getText().toString())){
+                    mPasswordMatch.setVisibility(View.GONE);
+                } else{
+                    mPasswordMatch.setVisibility(View.VISIBLE);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) { }
+        });
+
         Button btnRegister = (Button) findViewById(R.id.btn_register);
         btnRegister.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -110,7 +172,7 @@ public class RegisterActivity extends AppCompatActivity {
                                         startActivity(intent);
                                     } else {
                                         // If register fails, display a message to the user.
-                                        Toast.makeText(RegisterActivity.this, "Authentication failed.",
+                                        Toast.makeText(RegisterActivity.this, "Email has been registered.",
                                                 Toast.LENGTH_SHORT).show();
                                         mProgressBar.setVisibility(View.GONE);
                                     }
