@@ -63,7 +63,6 @@ public class CreatePostActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
         uploadImageButton = (ImageButton) findViewById(R.id.upload_image_button);
-        postTitleText = (EditText) findViewById(R.id.post_title_text);
         postDescriptionText = (EditText) findViewById(R.id.post_description_text);
         progressBar = (ProgressBar) findViewById(R.id.post_progress_bar);
         progressBar.setVisibility(View.GONE);

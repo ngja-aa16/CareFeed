@@ -108,7 +108,7 @@ public class CreateProfileActivity extends AppCompatActivity {
 
             if(resultCode == RESULT_OK){
                 uploadedImage = result.getUri();
-                profileImage.setImageURI(uploadedImage);
+                Picasso.get().load(uploadedImage).into(profileImage); //profileImageView
             } else {
                 Toast.makeText(CreateProfileActivity.this, "Image can't be crop", Toast.LENGTH_SHORT).show();
             }

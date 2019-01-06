@@ -20,6 +20,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.squareup.picasso.Picasso;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -28,13 +29,12 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class EditProfileActivity extends AppCompatActivity {
 
-    BitmapTransfer bitmapTransfer;
-
     private Toolbar mToolbar;
     private CircleImageView mImageView;
     private EditText mUsername, mAge, mIntro;
     private TextView mChange;
     private ProgressBar mProgressBar;
+    private User currentLoginUser;
 
     // --> Firebase
     private FirebaseAuth mAuth;
@@ -66,8 +66,7 @@ public class EditProfileActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater infalter = getMenuInflater();
-        infalter.inflate(R.menu.done_menu, menu);
+        menu.add(0, Menu.FIRST, Menu.NONE, "Done").setIcon(R.drawable.ic_done_white).setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 
         return true;
     }
@@ -77,7 +76,7 @@ public class EditProfileActivity extends AppCompatActivity {
         Intent intent;
 
         switch(item.getItemId()){
-            case R.id.done:
+            case Menu.FIRST:
                 // update firebase
                 updateUserInformation();
                 return true;
@@ -89,22 +88,23 @@ public class EditProfileActivity extends AppCompatActivity {
     @Override
     public void onStart() {
         super.onStart();
+
         mProgressBar.setVisibility(View.VISIBLE);
         // get data from previous activity
         Bundle extras = getIntent().getExtras();
 
         if(extras != null) {
-            byte[] byteArray = extras.getByteArray("profilePicture");
-            String username = extras.getString("username");
-            String age = extras.getString("age");
-            String intro = extras.getString("intro");
-            Bitmap bmp = bitmapTransfer.getBitmap();
+            currentLoginUser = new User(extras.getString("age"),extras.getString("introduction"), extras.getString("profileImage"), extras.getString("username"));
+
 
             // set data to current activity field
-            mImageView.setImageBitmap(bmp);
-            mUsername.setText(username);
-            mAge.setText(age);
-            mIntro.setText(intro);
+            mUsername.setText(currentLoginUser.getUsername());
+            mAge.setText(currentLoginUser.getAge());
+            mIntro.setText(currentLoginUser.getIntroduction());
+
+            if(!currentLoginUser.getProfileImage().equals("")){
+                Picasso.get().load(currentLoginUser.getProfileImage()).into(mImageView);
+            }
         }
 
         mProgressBar.setVisibility(View.GONE);

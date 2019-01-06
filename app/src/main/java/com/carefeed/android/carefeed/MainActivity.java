@@ -43,6 +43,7 @@ public class MainActivity extends AppCompatActivity {
     private DatabaseReference userRef;
     private ProgressDialog loadingBar;
     private String currentUserID;
+    private User currentLoginUser = new User();
     private BottomNavigationView.OnNavigationItemSelectedListener navListener = new BottomNavigationView.OnNavigationItemSelectedListener() {
         @Override
         public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
@@ -103,6 +104,11 @@ public class MainActivity extends AppCompatActivity {
             case android.R.id.home:
                 Toast.makeText(this, "Profile", Toast.LENGTH_SHORT).show();
                 intent = new Intent(MainActivity.this, ProfileActivity.class);
+                intent.putExtra("age", currentLoginUser.getAge());
+                intent.putExtra("introduction", currentLoginUser.getIntroduction());
+                intent.putExtra("username", currentLoginUser.getUsername());
+                intent.putExtra("profileImage", currentLoginUser.getProfileImage());
+                intent.putExtra("isLoginUser", true);
                 startActivity(intent);
                 return true;
             case R.id.menu_setting:
@@ -181,6 +187,9 @@ public class MainActivity extends AppCompatActivity {
                             ChangeUserProfileImage(false);
                         }
                         Toast.makeText(MainActivity.this, "Welcome back, " + dataSnapshot.child("username").getValue().toString(), Toast.LENGTH_SHORT).show();
+                        currentLoginUser.setAge(dataSnapshot.child("age").getValue().toString());
+                        currentLoginUser.setIntroduction(dataSnapshot.child("introduction").getValue().toString());
+                        currentLoginUser.setUsername(dataSnapshot.child("username").getValue().toString());
                     }
                 }
 
@@ -226,6 +235,7 @@ public class MainActivity extends AppCompatActivity {
                         Picasso.get()
                                 .load(image).transform(new CropCircleTransformation()).resize(100, 100).centerCrop()
                                 .into(homeIndicatorTarget);
+                        currentLoginUser.setProfileImage(image);
                         loadingBar.dismiss();
                     }
                 }
@@ -236,6 +246,7 @@ public class MainActivity extends AppCompatActivity {
                 }
             });
         } else {
+            currentLoginUser.setProfileImage("");
             Picasso.get().load(R.drawable.profile).transform(new CropCircleTransformation()).resize(100, 100).centerCrop().into(homeIndicatorTarget);
             loadingBar.dismiss();
         }

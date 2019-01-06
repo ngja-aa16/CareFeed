@@ -63,8 +63,7 @@ public class ChangePasswordActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater infalter = getMenuInflater();
-        infalter.inflate(R.menu.done_menu, menu);
+        menu.add(0, Menu.FIRST, Menu.NONE, "Done").setIcon(R.drawable.ic_done_white).setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 
         return true;
     }
@@ -72,7 +71,7 @@ public class ChangePasswordActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch(item.getItemId()){
-            case R.id.done:
+            case Menu.FIRST:
                 mProgressBar.setVisibility(View.VISIBLE);
                 doneOnClick();
                 return true;
