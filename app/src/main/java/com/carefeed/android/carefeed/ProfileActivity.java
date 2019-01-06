@@ -76,7 +76,7 @@ public class ProfileActivity extends AppCompatActivity {
         Log.d("currentLoginUsername", "onCreateOptionMenu");
         if(isLoginUser)
             menu.add(0, Menu.FIRST, Menu.NONE, "Edit").setIcon(R.drawable.ic_edit_white).setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-        mProgressBar.setVisibility(View.GONE);  
+        mProgressBar.setVisibility(View.GONE);
         return super.onCreateOptionsMenu(menu);
     }
 
