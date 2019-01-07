@@ -10,6 +10,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
@@ -44,6 +45,7 @@ public class MainActivity extends AppCompatActivity {
     private ProgressDialog loadingBar;
     private String currentUserID;
     private User currentLoginUser = new User();
+    private boolean firstTimeLogin = true;
     private BottomNavigationView.OnNavigationItemSelectedListener navListener = new BottomNavigationView.OnNavigationItemSelectedListener() {
         @Override
         public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
@@ -88,13 +90,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onStart() {
-        super.onStart();
-        // onActivity Result
-        retrieveInfoFromDatabase();
-    }
-
-    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater infalter = getMenuInflater();
         infalter.inflate(R.menu.options_menu, menu);
@@ -134,6 +129,12 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        retrieveInfoFromDatabase();
+    }
+
     private void logOut() {
         mAuth.signOut();
         finish();
@@ -144,10 +145,12 @@ public class MainActivity extends AppCompatActivity {
     // ---------------------- Firebase -----------------------
     public void retrieveInfoFromDatabase() {
 
-        loadingBar.setTitle("Fetching data...");
-        loadingBar.setMessage("Please wait, while the server is fetching your information");
-        loadingBar.show();
-        loadingBar.setCancelable(false);
+        if(firstTimeLogin) {
+            loadingBar.setTitle("Fetching data...");
+            loadingBar.setMessage("Please wait, while the server is fetching your information");
+            loadingBar.show();
+            loadingBar.setCancelable(false);
+        }
 
         @SuppressLint("HandlerLeak") final Handler h = new Handler() {
             @Override
@@ -195,10 +198,13 @@ public class MainActivity extends AppCompatActivity {
                         } else {
                             ChangeUserProfileImage(false);
                         }
-                        Toast.makeText(MainActivity.this, "Welcome back, " + dataSnapshot.child("username").getValue().toString(), Toast.LENGTH_SHORT).show();
                         currentLoginUser.setAge(dataSnapshot.child("age").getValue().toString());
                         currentLoginUser.setIntroduction(dataSnapshot.child("introduction").getValue().toString());
                         currentLoginUser.setUsername(dataSnapshot.child("username").getValue().toString());
+                        if(firstTimeLogin){
+                            Toast.makeText(MainActivity.this, "Welcome back, " + currentLoginUser.getUsername(), Toast.LENGTH_SHORT).show();
+                            firstTimeLogin = false;
+                        }
                     }
                 }
 

@@ -36,7 +36,7 @@ public class ProfileActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.layout_profile);
 
-        mToolbar = (Toolbar) findViewById(R.id.main_app_bar);
+        mToolbar = (Toolbar) findViewById(R.id.profile_page_toolbar);
         mUsername = (TextView) findViewById(R.id.txt_username);
         mIntro = (TextView) findViewById(R.id.txt_intro);
         mImageView = (CircleImageView) findViewById(R.id.profile_picture);
@@ -99,7 +99,9 @@ public class ProfileActivity extends AppCompatActivity {
                 currentLoginUser.setProfile_image(extras.getString("profileImage"));
 
                 Log.d("getExtras",currentLoginUser.getProfile_image());
-                Picasso.get().load(currentLoginUser.getProfile_image()).into(mImageView);
+                if(!currentLoginUser.getProfile_image().equals("")){
+                    Picasso.get().load(currentLoginUser.getProfile_image()).into(mImageView);
+                }
                 mUsername.setText(currentLoginUser.getUsername());
                 mIntro.setText(currentLoginUser.getIntroduction());
                 Toast.makeText(this, "Update Successful", Toast.LENGTH_SHORT).show();

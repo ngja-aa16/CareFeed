@@ -55,7 +55,7 @@ public class EditProfileActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.layout_edit_profile);
 
-        mToolbar = (Toolbar) findViewById(R.id.main_app_bar);
+        mToolbar = (Toolbar) findViewById(R.id.edit_profile_toolbar);
         mImageView = (CircleImageView) findViewById(R.id.eProfile_picture);
         mUsername = (EditText) findViewById(R.id.eProfile_username);
         mAge = (EditText) findViewById(R.id.eProfile_age);
