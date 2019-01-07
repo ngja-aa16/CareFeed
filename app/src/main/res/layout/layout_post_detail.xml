@@ -4,6 +4,17 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".PostDetailActivity">
+    tools:context=".PostDetail">
+
+    <include
+        android:id="@+id/post_detail_toolbar"
+        layout="@layout/app_bar_layout"/>
+
+    <include
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/post_detail_layout"
+        layout="@layout/users_post_layout"
+        android:layout_below="@+id/post_detail_toolbar"/>
 
 </RelativeLayout>

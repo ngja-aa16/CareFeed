@@ -1,17 +1,16 @@
 package com.carefeed.android.carefeed;
 
 public class Post {
-    private String date, description, postImage, time, title, userID, userProfileImage, username;
+    private String date, description, postImage, time, userID, userProfileImage, username;
 
     public Post() {
     }
 
-    public Post(String date, String description, String postImage, String time, String title, String userID, String userProfileImage, String username) {
+    public Post(String date, String description, String postImage, String time, String userID, String userProfileImage, String username) {
         this.date = date;
         this.description = description;
         this.postImage = postImage;
         this.time = time;
-        this.title = title;
         this.userID = userID;
         this.userProfileImage = userProfileImage;
         this.username = username;
@@ -47,14 +46,6 @@ public class Post {
 
     public void setTime(String time) {
         this.time = time;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
     }
 
     public String getUserID() {

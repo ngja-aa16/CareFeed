@@ -87,21 +87,23 @@ public class PostsFragment extends Fragment {
             @Override
             protected void onBindViewHolder(@NonNull final PostViewHolder holder, int position, @NonNull Post model) {
                 holder.loadingBar.setVisibility(View.VISIBLE);
-                String postIDs = getRef(position).getKey();
+                final String postIDs = getRef(position).getKey();
 
                 Log.d("onBindViewHolder", "onBindViewHolder");
                 postRef.child(postIDs).addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    if(dataSnapshot.exists()){
+
                         final String userID = dataSnapshot.child("userID").getValue().toString();
-                        String date = dataSnapshot.child("date").getValue().toString();
-                        String time = dataSnapshot.child("time").getValue().toString();
-                        String description = dataSnapshot.child("description").getValue().toString();
+                        final String date = dataSnapshot.child("date").getValue().toString();
+                        final String time = dataSnapshot.child("time").getValue().toString();
+                        final String description = dataSnapshot.child("description").getValue().toString();
                         final String postImage = dataSnapshot.child("post_image").getValue().toString();
 
                         holder.dateTime.setText(date + " " + time);
                         holder.postDescription.setText(description);
-                        Picasso.get().load(postImage).into(holder.postImage, new com.squareup.picasso.Callback(){
+                        Picasso.get().load(postImage).into(holder.postImage, new com.squareup.picasso.Callback() {
 
                             @Override
                             public void onSuccess() {
@@ -110,6 +112,7 @@ public class PostsFragment extends Fragment {
 
                             @Override
                             public void onError(Exception e) {
+                                holder.loadingBar.setVisibility(View.GONE);
                                 holder.postImage.setImageResource(R.drawable.failimage);
                             }
                         });
@@ -120,8 +123,9 @@ public class PostsFragment extends Fragment {
 
                                 final String username = dataSnapshot.child("username").getValue().toString();
                                 holder.profileUsername.setText(username);
-
-                                Log.d("userRef","userRef" + username);
+                                if (dataSnapshot.hasChild("profile_image")) {
+                                    Picasso.get().load(dataSnapshot.child("profile_image").getValue().toString()).into(holder.profileImage);
+                                }
 
                                 holder.profileImage.setOnClickListener(new View.OnClickListener() {
                                     @Override
@@ -130,17 +134,15 @@ public class PostsFragment extends Fragment {
                                         profileIntent.putExtra("username", username);
                                         profileIntent.putExtra("age", dataSnapshot.child("age").getValue().toString());
                                         profileIntent.putExtra("introduction", dataSnapshot.child("introduction").getValue().toString());
-                                        if(currentLoginUserId.equals(userID)){
+                                        if (currentLoginUserId.equals(userID)) {
                                             Log.d("loginUser", "true");
                                             profileIntent.putExtra("isLoginUser", true);
                                         } else {
                                             Log.d("loginUser", "false");
                                             profileIntent.putExtra("isLoginUser", false);
                                         }
-                                        if(dataSnapshot.hasChild("profile_image")){
-                                            String profileImage = dataSnapshot.child("profile_image").getValue().toString();
-                                            Picasso.get().load(profileImage).into(holder.profileImage);
-                                            profileIntent.putExtra("profileImage",profileImage);
+                                        if (dataSnapshot.hasChild("profile_image")) {
+                                            profileIntent.putExtra("profileImage", dataSnapshot.child("profile_image").getValue().toString());
                                         } else {
                                             profileIntent.putExtra("profileImage", "");
                                         }
@@ -156,6 +158,33 @@ public class PostsFragment extends Fragment {
                                         startActivity(fullScreenIntent);
                                     }
                                 });
+
+                                holder.recyclerView.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        Intent postDetailIntent = new Intent(getContext(), PostDetail.class);
+                                        if (currentLoginUserId.equals(userID)) {
+                                            Log.d("loginUser", "true");
+                                            postDetailIntent.putExtra("isLoginUser", true);
+                                        } else {
+                                            Log.d("loginUser", "false");
+                                            postDetailIntent.putExtra("isLoginUser", false);
+                                        }
+                                        if (dataSnapshot.hasChild("profile_image")) {
+                                            postDetailIntent.putExtra("profileImage", dataSnapshot.child("profile_image").getValue().toString());
+                                        } else {
+                                            postDetailIntent.putExtra("profileImage", "");
+                                        }
+                                        postDetailIntent.putExtra("postID", postIDs);
+                                        postDetailIntent.putExtra("username", username);
+                                        postDetailIntent.putExtra("date", date);
+                                        postDetailIntent.putExtra("time", time);
+                                        postDetailIntent.putExtra("description", description);
+                                        postDetailIntent.putExtra("postImage", postImage);
+                                        startActivity(postDetailIntent);
+                                    }
+                                });
+
                             }
 
                             @Override
@@ -165,12 +194,14 @@ public class PostsFragment extends Fragment {
                             }
                         });
                     }
+                }
 
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
-                        Toast.makeText(getContext(), "something went wrong", Toast.LENGTH_SHORT).show();
-                        Log.d("postRefFail", "postRefFail");
-                    }
+                        @Override
+                        public void onCancelled (@NonNull DatabaseError databaseError){
+                            Toast.makeText(getContext(), "something went wrong", Toast.LENGTH_SHORT).show();
+                            Log.d("postRefFail", "postRefFail");
+                        }
+
                 });
             }
 
@@ -192,6 +223,7 @@ public class PostsFragment extends Fragment {
 
     public class PostViewHolder extends RecyclerView.ViewHolder{
 
+        View recyclerView;
         CircleImageView profileImage;
         TextView profileUsername, dateTime, postDescription;
         ImageView postImage;
@@ -199,6 +231,7 @@ public class PostsFragment extends Fragment {
 
         public PostViewHolder(View itemView){
             super(itemView);
+            recyclerView = itemView;
             profileImage = itemView.findViewById(R.id.view_post_profile_image);
             profileUsername = itemView.findViewById(R.id.view_post_username);
             dateTime = itemView.findViewById(R.id.view_post_date_time);

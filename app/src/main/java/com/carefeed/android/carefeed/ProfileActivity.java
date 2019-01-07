@@ -23,7 +23,7 @@ public class ProfileActivity extends AppCompatActivity {
     private Toolbar mToolbar;
     private CircleImageView mImageView;
     private TextView mUsername, mIntro;
-    private ProgressBar mProgressBar;;
+    private ProgressBar mProgressBar;
     private User currentLoginUser;
     private boolean isLoginUser;
     private static final int START_EDIT_PROFILE = 2;
@@ -58,8 +58,9 @@ public class ProfileActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         Log.d("currentLoginUsername", "onCreateOptionMenu");
-        if(isLoginUser)
+        if(isLoginUser){
             menu.add(0, Menu.FIRST, Menu.NONE, "Edit").setIcon(R.drawable.ic_edit_white).setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+        }
         mProgressBar.setVisibility(View.GONE);
         return super.onCreateOptionsMenu(menu);
     }
