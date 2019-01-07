@@ -7,6 +7,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -37,10 +38,10 @@ public class ProfileActivity extends AppCompatActivity {
     private ProgressBar mProgressBar;;
     private User currentLoginUser;
     private boolean isLoginUser;
+    private static final int START_EDIT_PROFILE = 2;
 
     // --> Firebase
     private FirebaseAuth mAuth;
-    private DatabaseReference userRef;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,15 +55,10 @@ public class ProfileActivity extends AppCompatActivity {
         mProgressBar = (ProgressBar) findViewById(R.id.progress_bar);
         mProgressBar.setVisibility(View.VISIBLE);
 
-        Bundle extras = getIntent().getExtras();
-        if(extras != null){
-            currentLoginUser = new User(extras.getString("age"), extras.getString("introduction"), extras.getString("profileImage"), extras.getString("username"));
-            isLoginUser = extras.getBoolean("isLoginUser");
-            Log.d("Intentextras", currentLoginUser.getUsername());
-        }
-
         // --> get Firebase
         mAuth = FirebaseAuth.getInstance();
+
+        setUserData();
 
         // setting toolbar
         setSupportActionBar(mToolbar);
@@ -93,7 +89,7 @@ public class ProfileActivity extends AppCompatActivity {
                 intent.putExtra("introduction", currentLoginUser.getIntroduction());
                 intent.putExtra("profileImage", currentLoginUser.getProfileImage());
 
-                startActivity(intent);
+                startActivityForResult(intent, START_EDIT_PROFILE);
 
                 return true;
             default:
@@ -102,14 +98,31 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if(requestCode == START_EDIT_PROFILE){
+            if(resultCode == RESULT_OK){
+                
+            }
+        }
+    }
+
+    @Override
     public void onStart() {
         super.onStart();
-
         // display user information
-        setUserData();
     }
 
     private void setUserData() {
+        Bundle extras = getIntent().getExtras();
+        if(extras != null){
+            currentLoginUser = new User(extras.getString("age"), extras.getString("introduction"), extras.getString("profileImage"), extras.getString("username"));
+            isLoginUser = extras.getBoolean("isLoginUser");
+            Log.d("Intentextras", currentLoginUser.getUsername());
+        }
+
+
         mUsername.setText(currentLoginUser.getUsername());
         mIntro.setText(currentLoginUser.getIntroduction());
         if(!currentLoginUser.getProfileImage().equals("")){

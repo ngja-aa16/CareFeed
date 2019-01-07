@@ -76,6 +76,9 @@ public class EditProfileActivity extends AppCompatActivity {
         Intent intent;
 
         switch(item.getItemId()){
+            case android.R.id.home:
+                finish();
+                return true;
             case Menu.FIRST:
                 // update firebase
                 updateUserInformation();
@@ -108,11 +111,6 @@ public class EditProfileActivity extends AppCompatActivity {
         }
 
         mProgressBar.setVisibility(View.GONE);
-    }
-
-    @Override
-    public void onBackPressed() {
-        finish();
     }
 
     //check string if null
