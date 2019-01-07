@@ -11,17 +11,17 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.squareup.picasso.Picasso;
-
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class ProfileActivity extends AppCompatActivity {
 
     private Toolbar mToolbar;
-    private CircleImageView profilePicture;
+    private CircleImageView mImageView;
     private TextView mUsername, mIntro;
     private ProgressBar mProgressBar;;
     private User currentLoginUser;
@@ -36,10 +36,10 @@ public class ProfileActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.layout_profile);
 
-        mToolbar = (Toolbar) findViewById(R.id.profile_page_toolbar);
+        mToolbar = (Toolbar) findViewById(R.id.main_app_bar);
         mUsername = (TextView) findViewById(R.id.txt_username);
         mIntro = (TextView) findViewById(R.id.txt_intro);
-        profilePicture = (CircleImageView) findViewById(R.id.profile_picture);
+        mImageView = (CircleImageView) findViewById(R.id.profile_picture);
         mProgressBar = (ProgressBar) findViewById(R.id.progress_bar);
         mProgressBar.setVisibility(View.VISIBLE);
 
@@ -91,15 +91,20 @@ public class ProfileActivity extends AppCompatActivity {
 
         if(requestCode == START_EDIT_PROFILE){
             if(resultCode == RESULT_OK){
+                Log.d("getExtras","Success");
+                Bundle extras = data.getExtras();
+                currentLoginUser.setUsername(extras.getString("username"));
+                currentLoginUser.setAge(extras.getString("age"));
+                currentLoginUser.setIntroduction(extras.getString("introduction"));
+                currentLoginUser.setProfile_image(extras.getString("profileImage"));
 
+                Log.d("getExtras",currentLoginUser.getProfile_image());
+                Picasso.get().load(currentLoginUser.getProfile_image()).into(mImageView);
+                mUsername.setText(currentLoginUser.getUsername());
+                mIntro.setText(currentLoginUser.getIntroduction());
+                Toast.makeText(this, "Update Successful", Toast.LENGTH_SHORT).show();
             }
         }
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        // display user information
     }
 
     private void setUserData() {
@@ -110,11 +115,10 @@ public class ProfileActivity extends AppCompatActivity {
             Log.d("Intentextras", currentLoginUser.getUsername());
         }
 
-
         mUsername.setText(currentLoginUser.getUsername());
         mIntro.setText(currentLoginUser.getIntroduction());
         if(!currentLoginUser.getProfile_image().equals("")){
-            Picasso.get().load(currentLoginUser.getProfile_image()).into(profilePicture);
+            Picasso.get().load(currentLoginUser.getProfile_image()).into(mImageView);
         }
     }
 }

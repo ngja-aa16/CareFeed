@@ -85,6 +85,12 @@ public class MainActivity extends AppCompatActivity {
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new HomeFragment()).commit();
 
         mAuth = FirebaseAuth.getInstance();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        // onActivity Result
         retrieveInfoFromDatabase();
     }
 
@@ -111,8 +117,11 @@ public class MainActivity extends AppCompatActivity {
                 intent.putExtra("isLoginUser", true);
                 startActivity(intent);
                 return true;
+            case R.id.menu_search:
+                intent = new Intent(MainActivity.this, SearchUserActivity.class);
+                startActivity(intent);
+                return true;
             case R.id.menu_setting:
-                Toast.makeText(this, "Setting", Toast.LENGTH_SHORT).show();
                 intent = new Intent(MainActivity.this, ChangePasswordActivity.class);
                 startActivity(intent);
                 return true;

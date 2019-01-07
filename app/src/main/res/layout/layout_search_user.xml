@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".SearchUserActivity">
+
+    <android.support.design.widget.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/appBarId">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/main_app_bar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+        </android.support.v7.widget.Toolbar>
+    </android.support.design.widget.AppBarLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/appBarId"
+        android:id="@+id/linear_layout"
+        android:layout_marginTop="10dp"
+        android:paddingLeft="8dp"
+        android:layout_marginRight="8dp">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_search_black"
+            android:id="@+id/icon_search" />
+
+        <EditText
+            android:id="@+id/txt_search_user"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:hint="Search..."
+            android:inputType="text"
+            android:padding="8dp"
+            android:layout_toRightOf="@+id/icon_search"
+            android:layout_below="@+id/appBarId"/>
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="No result found"
+        android:textSize="18sp"
+        android:textColor="@color/grey"
+        android:layout_below="@id/linear_layout"
+        android:gravity="center_horizontal"
+        android:layout_marginTop="24dp"
+        android:id="@+id/result_not_found"/>
+
+    <android.support.v7.widget.RecyclerView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/linear_layout"
+        android:layout_marginTop="12dp"
+        android:paddingLeft="8dp"
+        android:id="@+id/recycler_friend"
+        >
+
+    </android.support.v7.widget.RecyclerView>
+
+</RelativeLayout>
