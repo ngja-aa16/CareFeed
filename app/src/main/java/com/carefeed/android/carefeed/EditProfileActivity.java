@@ -142,8 +142,8 @@ public class EditProfileActivity extends AppCompatActivity {
             mAge.setText(oldUserData.getAge());
             mIntro.setText(oldUserData.getIntroduction());
 
-            if(!oldUserData.getProfileImage().equals("")){
-                Picasso.get().load(oldUserData.getProfileImage()).into(mImageView);
+            if(!oldUserData.getProfile_image().equals("")){
+                Picasso.get().load(oldUserData.getProfile_image()).into(mImageView);
             }
         }
 
@@ -229,7 +229,7 @@ public class EditProfileActivity extends AppCompatActivity {
                     }
                 });
             } else {
-                intent.putExtra("profileImage", oldUserData.getProfileImage());
+                intent.putExtra("profileImage", oldUserData.getProfile_image());
                 setResult(RESULT_OK, intent);
                 finish();
             }

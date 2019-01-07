@@ -74,12 +74,17 @@
             android:name=".CreatePostActivity"
             android:parentActivityName=".MainActivity"
             android:screenOrientation="portrait" />
+
+        <activity android:name=".SearchUserActivity"
+            android:parentActivityName=".MainActivity"
+            android:screenOrientation="portrait"/>
+
         <activity
             android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
             android:theme="@style/Base.Theme.AppCompat" />
 
         <activity android:name=".FullScreenActivity"
-            android:parentActivityName=".MainActivity"></activity>
+            android:parentActivityName=".MainActivity"/>
     </application>
 
 </manifest>

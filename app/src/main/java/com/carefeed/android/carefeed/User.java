@@ -1,15 +1,15 @@
 package com.carefeed.android.carefeed;
 
 public class User {
-    private String age, introduction, profileImage, username;
+    private String age, introduction, profile_image, username;
 
     public User() {
     }
 
-    public User(String age, String introduction, String profileImage, String username) {
+    public User(String age, String introduction, String profile_image, String username) {
         this.age = age;
         this.introduction = introduction;
-        this.profileImage = profileImage;
+        this.profile_image = profile_image;
         this.username = username;
     }
 
@@ -29,12 +29,12 @@ public class User {
         this.introduction = introduction;
     }
 
-    public String getProfileImage() {
-        return profileImage;
+    public String getProfile_image() {
+        return profile_image;
     }
 
-    public void setProfileImage(String profileImage) {
-        this.profileImage = profileImage;
+    public void setProfile_image(String profile_image) {
+        this.profile_image = profile_image;
     }
 
     public String getUsername() {

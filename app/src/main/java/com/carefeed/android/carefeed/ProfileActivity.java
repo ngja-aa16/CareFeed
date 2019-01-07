@@ -75,7 +75,7 @@ public class ProfileActivity extends AppCompatActivity {
                 intent.putExtra("username", currentLoginUser.getUsername());
                 intent.putExtra("age", currentLoginUser.getAge());
                 intent.putExtra("introduction", currentLoginUser.getIntroduction());
-                intent.putExtra("profileImage", currentLoginUser.getProfileImage());
+                intent.putExtra("profileImage", currentLoginUser.getProfile_image());
 
                 startActivityForResult(intent, START_EDIT_PROFILE);
 
@@ -96,10 +96,10 @@ public class ProfileActivity extends AppCompatActivity {
                 currentLoginUser.setUsername(extras.getString("username"));
                 currentLoginUser.setAge(extras.getString("age"));
                 currentLoginUser.setIntroduction(extras.getString("introduction"));
-                currentLoginUser.setProfileImage(extras.getString("profileImage"));
+                currentLoginUser.setProfile_image(extras.getString("profileImage"));
 
-                Log.d("getExtras",currentLoginUser.getProfileImage());
-                Picasso.get().load(currentLoginUser.getProfileImage()).into(mImageView);
+                Log.d("getExtras",currentLoginUser.getProfile_image());
+                Picasso.get().load(currentLoginUser.getProfile_image()).into(mImageView);
                 mUsername.setText(currentLoginUser.getUsername());
                 mIntro.setText(currentLoginUser.getIntroduction());
                 Toast.makeText(this, "Update Successful", Toast.LENGTH_SHORT).show();
@@ -117,8 +117,8 @@ public class ProfileActivity extends AppCompatActivity {
 
         mUsername.setText(currentLoginUser.getUsername());
         mIntro.setText(currentLoginUser.getIntroduction());
-        if(!currentLoginUser.getProfileImage().equals("")){
-            Picasso.get().load(currentLoginUser.getProfileImage()).into(mImageView);
+        if(!currentLoginUser.getProfile_image().equals("")){
+            Picasso.get().load(currentLoginUser.getProfile_image()).into(mImageView);
         }
     }
 }
