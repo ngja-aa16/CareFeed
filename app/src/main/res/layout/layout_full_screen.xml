@@ -7,18 +7,10 @@
     tools:context=".FullScreenActivity"
     android:background="@color/black">
 
-    <ImageView
+    <com.github.chrisbanes.photoview.PhotoView
         android:id="@+id/full_screen_imageView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:scaleType="fitCenter"/>
 
-    <android.support.v7.widget.Toolbar
-
-        android:id="@+id/full_screen_toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:elevation="10dp"
-        android:background="@android:color/transparent"
-        android:theme="@style/ToolbarColoredBackArrow"/>
 </RelativeLayout>

@@ -7,26 +7,20 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.widget.ImageView;
 
+import com.github.chrisbanes.photoview.PhotoView;
 import com.squareup.picasso.Picasso;
 
 public class FullScreenActivity extends AppCompatActivity {
 
-    private Toolbar transparentToolbar;
-    private ImageView fullScreenImageView;
+    private PhotoView fullScreenImageView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.layout_full_screen);
 
-        transparentToolbar = (Toolbar) findViewById(R.id.full_screen_toolbar);
-        fullScreenImageView = (ImageView) findViewById(R.id.full_screen_imageView);
+        fullScreenImageView = (PhotoView) findViewById(R.id.full_screen_imageView);
 
         Picasso.get().load(getIntent().getExtras().getString("postImage")).into(fullScreenImageView);
-
-        setSupportActionBar(transparentToolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
-        getSupportActionBar().setTitle("");
     }
 }

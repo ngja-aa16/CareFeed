@@ -45,11 +45,17 @@ public class PostsFragment extends Fragment {
     private FirebaseRecyclerAdapter<Post, PostViewHolder> firebaseRecyclerAdapter;
     private Query query;
     LinearLayoutManager linearLayoutManager;
-    private static Bundle mBundleRecyclerViewState;
-    private final String KEY_RECYCLER_STATE = "recycler_state";
+
+    private Parcelable listState;
 
     public PostsFragment() {
         // Required empty public constructor
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        Log.d("oncreate", "oncreate");
     }
 
     @Override
@@ -70,6 +76,9 @@ public class PostsFragment extends Fragment {
         linearLayoutManager.setStackFromEnd(true);
         linearLayoutManager.setReverseLayout(true);
         userPostList.setLayoutManager(linearLayoutManager);
+        if(listState != null){
+            listState=savedInstanceState.getParcelable("ListState");
+        }
 
         postRef = FirebaseDatabase.getInstance().getReference().child("Post_Info");
         query = postRef.orderByKey();
@@ -155,6 +164,8 @@ public class PostsFragment extends Fragment {
                                         startActivity(fullScreenIntent);
                                     }
                                 });
+
+                                userPostList.getLayoutManager().onRestoreInstanceState(listState);
                             }
 
                             @Override
@@ -184,6 +195,7 @@ public class PostsFragment extends Fragment {
         };
         userPostList.setAdapter(firebaseRecyclerAdapter);
         firebaseRecyclerAdapter.startListening();
+        userPostList.getLayoutManager().onRestoreInstanceState(listState);
     }
 
     public class PostViewHolder extends RecyclerView.ViewHolder{
@@ -205,19 +217,6 @@ public class PostsFragment extends Fragment {
     @Override
     public void onPause() {
         super.onPause();
-        mBundleRecyclerViewState = new Bundle();
-        Parcelable listState = userPostList.getLayoutManager().onSaveInstanceState();
-        mBundleRecyclerViewState.putParcelable(KEY_RECYCLER_STATE, listState);
-    }
-
-    public void onResume()
-    {
-        super.onResume();
-
-        // restore RecyclerView state
-        if (mBundleRecyclerViewState != null) {
-            Parcelable listState = mBundleRecyclerViewState.getParcelable(KEY_RECYCLER_STATE);
-            userPostList.getLayoutManager().onRestoreInstanceState(listState);
-        }
+        listState = userPostList.getLayoutManager().onSaveInstanceState();
     }
 }

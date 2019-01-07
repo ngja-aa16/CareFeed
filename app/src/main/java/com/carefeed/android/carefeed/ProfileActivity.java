@@ -103,7 +103,7 @@ public class ProfileActivity extends AppCompatActivity {
 
         if(requestCode == START_EDIT_PROFILE){
             if(resultCode == RESULT_OK){
-                
+
             }
         }
     }
