@@ -1,26 +1,33 @@
 package com.carefeed.android.carefeed;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ProgressBar;
-import android.support.v7.widget.Toolbar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
+import com.theartofdev.edmodo.cropper.CropImage;
+import com.theartofdev.edmodo.cropper.CropImageView;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -34,11 +41,14 @@ public class EditProfileActivity extends AppCompatActivity {
     private EditText mUsername, mAge, mIntro;
     private TextView mChange;
     private ProgressBar mProgressBar;
-    private User currentLoginUser;
+    private User oldUserData;
+    private String image;
+    private Uri uploadedImage;
 
     // --> Firebase
     private FirebaseAuth mAuth;
     private DatabaseReference rootRef;
+    private StorageReference mStorage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,11 +72,26 @@ public class EditProfileActivity extends AppCompatActivity {
         // --> get Firebase
         mAuth = FirebaseAuth.getInstance();
         rootRef = FirebaseDatabase.getInstance().getReference();
+        mStorage = FirebaseStorage.getInstance().getReference().child("profile_images");
+
+        init();
+
+        mChange.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                CropImage.activity()
+                        .setGuidelines(CropImageView.Guidelines.ON)
+                        .setAspectRatio(1,1)
+                        .start(EditProfileActivity.this);
+            }
+        });
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        menu.add(0, Menu.FIRST, Menu.NONE, "Done").setIcon(R.drawable.ic_done_white).setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+        menu.add(0, Menu.FIRST, Menu.NONE, "Done")
+                .setIcon(R.drawable.ic_done_white)
+                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 
         return true;
     }
@@ -89,24 +114,36 @@ public class EditProfileActivity extends AppCompatActivity {
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
 
+        if(requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE){
+            CropImage.ActivityResult result = CropImage.getActivityResult(data);
+            if(resultCode == RESULT_OK){
+                uploadedImage = result.getUri();
+                Picasso.get().load(uploadedImage).into(mImageView);
+            }
+        }
+    }
+
+    public void init() {
         mProgressBar.setVisibility(View.VISIBLE);
         // get data from previous activity
         Bundle extras = getIntent().getExtras();
 
         if(extras != null) {
-            currentLoginUser = new User(extras.getString("age"),extras.getString("introduction"), extras.getString("profileImage"), extras.getString("username"));
-
+            oldUserData = new User(extras.getString("age")
+                    , extras.getString("introduction")
+                    , extras.getString("profileImage")
+                    , extras.getString("username"));
 
             // set data to current activity field
-            mUsername.setText(currentLoginUser.getUsername());
-            mAge.setText(currentLoginUser.getAge());
-            mIntro.setText(currentLoginUser.getIntroduction());
+            mUsername.setText(oldUserData.getUsername());
+            mAge.setText(oldUserData.getAge());
+            mIntro.setText(oldUserData.getIntroduction());
 
-            if(!currentLoginUser.getProfileImage().equals("")){
-                Picasso.get().load(currentLoginUser.getProfileImage()).into(mImageView);
+            if(!oldUserData.getProfileImage().equals("")){
+                Picasso.get().load(oldUserData.getProfileImage()).into(mImageView);
             }
         }
 
@@ -134,17 +171,10 @@ public class EditProfileActivity extends AppCompatActivity {
         mProgressBar.setVisibility(View.VISIBLE);
         String username = mUsername.getText().toString()
                 , age = mAge.getText().toString()
-                , intro = mIntro.getText().toString();
-
-        mChange.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //CropImage.activity().setGuidelines(CropImageView.Guidelines.ON).setAspectRatio(1,1).start(EditProfileActivity.this);
-            }
-        });
-
-        String currentUserID = mAuth.getCurrentUser().getUid();
-        DatabaseReference userDb = rootRef.child("User_Info").child(currentUserID);
+                , intro = mIntro.getText().toString()
+                , currentUserID = mAuth.getCurrentUser().getUid();
+        final DatabaseReference userDb = rootRef.child("User_Info").child(currentUserID);
+        final Intent intent = new Intent();
 
         if(!checkNull(username, age, intro)) {
             mProgressBar.setVisibility(View.VISIBLE);
@@ -157,15 +187,52 @@ public class EditProfileActivity extends AppCompatActivity {
                 @Override
                 public void onComplete(@NonNull Task task) {
                     if(task.isSuccessful()) {
-                        Toast.makeText(EditProfileActivity.this, "Update successful.", Toast.LENGTH_SHORT).show();
-                        finish();
-                    }else{
-                        Toast.makeText(EditProfileActivity.this, "Update failed. Please try again", Toast.LENGTH_SHORT).show();
+                        Log.d("UpdateFirebase", "Success");
                     }
-                    mProgressBar.setVisibility(View.GONE);
+                    else{
+                        Log.d("UpdateFirebase", "Failed");
+                    }
                 }
             });
 
+            intent.putExtra("username", username);
+            intent.putExtra("age", age);
+            intent.putExtra("introduction", intro);
+
+            if(uploadedImage != null){
+                StorageReference filePath = mStorage.child(currentUserID + ".jpg");
+
+                //Add image to firebase storage
+                filePath.putFile(uploadedImage).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
+                        if(task.isSuccessful()){
+                            Task<Uri> result = task.getResult().getMetadata().getReference().getDownloadUrl();
+
+                            result.addOnSuccessListener(new OnSuccessListener<Uri>() {
+                                @Override
+                                public void onSuccess(Uri uri) {
+                                    final String downloadUrl = uri.toString();
+
+                                    //Add image url to profile firebase
+                                    userDb.child("profile_image").setValue(downloadUrl);
+                                    intent.putExtra("profileImage", downloadUrl);
+                                    Log.d("Upload_Image", "Success" + downloadUrl);
+                                    setResult(RESULT_OK,intent);
+                                    finish();
+                                    mProgressBar.setVisibility(View.GONE);
+                                }
+                            });
+                        } else {
+                            Toast.makeText(EditProfileActivity.this, "Error occured" + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+            } else {
+                intent.putExtra("profileImage", oldUserData.getProfileImage());
+                setResult(RESULT_OK, intent);
+                finish();
+            }
         }
         else{
             mProgressBar.setVisibility(View.GONE);
