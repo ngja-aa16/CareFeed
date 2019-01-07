@@ -3,18 +3,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <android.support.design.widget.AppBarLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/appBarId">
-
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/main_app_bar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-        </android.support.v7.widget.Toolbar>
-    </android.support.design.widget.AppBarLayout>
+    <include
+        android:id="@+id/profile_page_toolbar"
+        layout="@layout/app_bar_layout"></include>
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/profile_picture"
@@ -22,7 +13,7 @@
         android:layout_height="100dp"
         android:layout_marginTop="20dp"
         android:src="@drawable/profile"
-        android:layout_below="@id/appBarId"
+        android:layout_below="@id/profile_page_toolbar"
         android:layout_centerInParent="true"
         />
 

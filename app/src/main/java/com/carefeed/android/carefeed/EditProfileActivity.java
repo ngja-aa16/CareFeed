@@ -1,12 +1,10 @@
 package com.carefeed.android.carefeed;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
@@ -45,7 +43,7 @@ public class EditProfileActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.layout_edit_profile);
 
-        mToolbar = (Toolbar) findViewById(R.id.main_app_bar);
+        mToolbar = (Toolbar) findViewById(R.id.edit_profile_toolbar);
         mImageView = (CircleImageView) findViewById(R.id.eProfile_picture);
         mUsername = (EditText) findViewById(R.id.eProfile_username);
         mAge = (EditText) findViewById(R.id.eProfile_age);
@@ -105,8 +103,8 @@ public class EditProfileActivity extends AppCompatActivity {
             mAge.setText(currentLoginUser.getAge());
             mIntro.setText(currentLoginUser.getIntroduction());
 
-            if(!currentLoginUser.getProfileImage().equals("")){
-                Picasso.get().load(currentLoginUser.getProfileImage()).into(mImageView);
+            if(!currentLoginUser.getProfile_image().equals("")){
+                Picasso.get().load(currentLoginUser.getProfile_image()).into(mImageView);
             }
         }
 

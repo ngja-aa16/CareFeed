@@ -18,6 +18,7 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -53,12 +54,6 @@ public class PostsFragment extends Fragment {
     }
 
     @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        Log.d("oncreate", "oncreate");
-    }
-
-    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_posts, container, false);
@@ -76,9 +71,6 @@ public class PostsFragment extends Fragment {
         linearLayoutManager.setStackFromEnd(true);
         linearLayoutManager.setReverseLayout(true);
         userPostList.setLayoutManager(linearLayoutManager);
-        if(listState != null){
-            listState=savedInstanceState.getParcelable("ListState");
-        }
 
         postRef = FirebaseDatabase.getInstance().getReference().child("Post_Info");
         query = postRef.orderByKey();
@@ -86,12 +78,6 @@ public class PostsFragment extends Fragment {
 
         currentLoginUserId = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
-        return view;
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
         FirebaseRecyclerOptions<Post> firebaseRecyclerOptions =
                 new FirebaseRecyclerOptions.Builder<Post>()
                         .setQuery(query, Post.class)
@@ -100,7 +86,7 @@ public class PostsFragment extends Fragment {
         firebaseRecyclerAdapter = new FirebaseRecyclerAdapter<Post, PostViewHolder>(firebaseRecyclerOptions) {
             @Override
             protected void onBindViewHolder(@NonNull final PostViewHolder holder, int position, @NonNull Post model) {
-
+                holder.loadingBar.setVisibility(View.VISIBLE);
                 String postIDs = getRef(position).getKey();
 
                 Log.d("onBindViewHolder", "onBindViewHolder");
@@ -115,45 +101,49 @@ public class PostsFragment extends Fragment {
 
                         holder.dateTime.setText(date + " " + time);
                         holder.postDescription.setText(description);
-                        Picasso.get().load(postImage).into(holder.postImage);
+                        Picasso.get().load(postImage).into(holder.postImage, new com.squareup.picasso.Callback(){
 
-                        final Intent fullScreenIntent = new Intent(getContext(), FullScreenActivity.class);
-                        fullScreenIntent.putExtra("postImage", postImage);
+                            @Override
+                            public void onSuccess() {
+                                holder.loadingBar.setVisibility(View.GONE);
+                            }
+
+                            @Override
+                            public void onError(Exception e) {
+                                holder.postImage.setImageResource(R.drawable.failimage);
+                            }
+                        });
 
                         userRef.child(userID).addValueEventListener(new ValueEventListener() {
                             @Override
-                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                            public void onDataChange(@NonNull final DataSnapshot dataSnapshot) {
 
-                                final Intent profileIntent = new Intent(getContext(), ProfileActivity.class);
-
-                                if(dataSnapshot.hasChild("profile_image")){
-                                    String profileImage = dataSnapshot.child("profile_image").getValue().toString();
-                                    Picasso.get().load(profileImage).into(holder.profileImage);
-                                    profileIntent.putExtra("profileImage",profileImage);
-                                } else {
-                                    profileIntent.putExtra("profileImage", "");
-                                }
-
-                                String username = dataSnapshot.child("username").getValue().toString();
+                                final String username = dataSnapshot.child("username").getValue().toString();
                                 holder.profileUsername.setText(username);
-
-                                profileIntent.putExtra("username", username);
-                                profileIntent.putExtra("age", dataSnapshot.child("age").getValue().toString());
-                                profileIntent.putExtra("introduction", dataSnapshot.child("introduction").getValue().toString());
-
-                                if(currentLoginUserId.equals(userID)){
-                                    Log.d("loginUser", "true");
-                                    profileIntent.putExtra("isLoginUser", true);
-                                } else {
-                                    Log.d("loginUser", "false");
-                                    profileIntent.putExtra("isLoginUser", false);
-                                }
 
                                 Log.d("userRef","userRef" + username);
 
                                 holder.profileImage.setOnClickListener(new View.OnClickListener() {
                                     @Override
                                     public void onClick(View v) {
+                                        Intent profileIntent = new Intent(getContext(), ProfileActivity.class);
+                                        profileIntent.putExtra("username", username);
+                                        profileIntent.putExtra("age", dataSnapshot.child("age").getValue().toString());
+                                        profileIntent.putExtra("introduction", dataSnapshot.child("introduction").getValue().toString());
+                                        if(currentLoginUserId.equals(userID)){
+                                            Log.d("loginUser", "true");
+                                            profileIntent.putExtra("isLoginUser", true);
+                                        } else {
+                                            Log.d("loginUser", "false");
+                                            profileIntent.putExtra("isLoginUser", false);
+                                        }
+                                        if(dataSnapshot.hasChild("profile_image")){
+                                            String profileImage = dataSnapshot.child("profile_image").getValue().toString();
+                                            Picasso.get().load(profileImage).into(holder.profileImage);
+                                            profileIntent.putExtra("profileImage",profileImage);
+                                        } else {
+                                            profileIntent.putExtra("profileImage", "");
+                                        }
                                         startActivity(profileIntent);
                                     }
                                 });
@@ -161,11 +151,11 @@ public class PostsFragment extends Fragment {
                                 holder.postImage.setOnClickListener(new View.OnClickListener() {
                                     @Override
                                     public void onClick(View v) {
+                                        Intent fullScreenIntent = new Intent(getContext(), FullScreenActivity.class);
+                                        fullScreenIntent.putExtra("postImage", postImage);
                                         startActivity(fullScreenIntent);
                                     }
                                 });
-
-                                userPostList.getLayoutManager().onRestoreInstanceState(listState);
                             }
 
                             @Override
@@ -190,12 +180,14 @@ public class PostsFragment extends Fragment {
                 Log.d("onCreateViewHolder", "onCreateViewHolder");
                 View view = LayoutInflater.from(getContext()).inflate(R.layout.users_post_layout, viewGroup,  false);
                 PostViewHolder viewHolder = new PostViewHolder(view);
+                userPostList.getLayoutManager().onRestoreInstanceState(listState);
                 return viewHolder;
             }
         };
         userPostList.setAdapter(firebaseRecyclerAdapter);
         firebaseRecyclerAdapter.startListening();
-        userPostList.getLayoutManager().onRestoreInstanceState(listState);
+
+        return view;
     }
 
     public class PostViewHolder extends RecyclerView.ViewHolder{
@@ -203,6 +195,7 @@ public class PostsFragment extends Fragment {
         CircleImageView profileImage;
         TextView profileUsername, dateTime, postDescription;
         ImageView postImage;
+        ProgressBar loadingBar;
 
         public PostViewHolder(View itemView){
             super(itemView);
@@ -211,6 +204,7 @@ public class PostsFragment extends Fragment {
             dateTime = itemView.findViewById(R.id.view_post_date_time);
             postDescription = itemView.findViewById(R.id.view_post_description);
             postImage = itemView.findViewById(R.id.view_post_image);
+            loadingBar = itemView.findViewById(R.id.post_layout_progress_bar);
         }
     }
 
@@ -218,5 +212,11 @@ public class PostsFragment extends Fragment {
     public void onPause() {
         super.onPause();
         listState = userPostList.getLayoutManager().onSaveInstanceState();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        userPostList.getLayoutManager().onRestoreInstanceState(listState);
     }
 }

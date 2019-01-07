@@ -1,31 +1,19 @@
 package com.carefeed.android.carefeed;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.os.Handler;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
-import com.squareup.picasso.Target;
 
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -48,7 +36,7 @@ public class ProfileActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.layout_profile);
 
-        mToolbar = (Toolbar) findViewById(R.id.main_app_bar);
+        mToolbar = (Toolbar) findViewById(R.id.profile_page_toolbar);
         mUsername = (TextView) findViewById(R.id.txt_username);
         mIntro = (TextView) findViewById(R.id.txt_intro);
         profilePicture = (CircleImageView) findViewById(R.id.profile_picture);
@@ -87,7 +75,7 @@ public class ProfileActivity extends AppCompatActivity {
                 intent.putExtra("username", currentLoginUser.getUsername());
                 intent.putExtra("age", currentLoginUser.getAge());
                 intent.putExtra("introduction", currentLoginUser.getIntroduction());
-                intent.putExtra("profileImage", currentLoginUser.getProfileImage());
+                intent.putExtra("profileImage", currentLoginUser.getProfile_image());
 
                 startActivityForResult(intent, START_EDIT_PROFILE);
 
@@ -125,8 +113,8 @@ public class ProfileActivity extends AppCompatActivity {
 
         mUsername.setText(currentLoginUser.getUsername());
         mIntro.setText(currentLoginUser.getIntroduction());
-        if(!currentLoginUser.getProfileImage().equals("")){
-            Picasso.get().load(currentLoginUser.getProfileImage()).into(profilePicture);
+        if(!currentLoginUser.getProfile_image().equals("")){
+            Picasso.get().load(currentLoginUser.getProfile_image()).into(profilePicture);
         }
     }
 }

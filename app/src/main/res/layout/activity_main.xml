@@ -8,7 +8,7 @@
 
     <include
         android:id="@+id/main_page_toolbar"
-        layout="@layout/app_bar_layout"></include>
+        layout="@layout/app_bar_layout"/>
 
     <FrameLayout
         android:id="@+id/fragment_container"

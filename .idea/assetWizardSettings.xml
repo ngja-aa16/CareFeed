@@ -29,28 +29,26 @@
                                           </PersistentState>
                                         </value>
                                       </entry>
+                                      <entry key="image">
+                                        <value>
+                                          <PersistentState>
+                                            <option name="values">
+                                              <map>
+                                                <entry key="trimmed" value="true" />
+                                              </map>
+                                            </option>
+                                          </PersistentState>
+                                        </value>
+                                      </entry>
                                     </map>
                                   </option>
                                   <option name="values">
                                     <map>
                                       <entry key="assetType" value="IMAGE" />
-                                      <entry key="imageAsset" value="C:\Users\tommy\AndroidStudioProjects\CareFeed\app\src\main\res\drawable-v24\carefeed_logo.png" />
-                                      <entry key="outputName" value="ic_android_icon" />
+                                      <entry key="imageAsset" value="C:\Users\tommy\Downloads\Compressed\Social Network App Icons\Social Network App Icons\logout.png" />
+                                      <entry key="outputName" value="lougot_white_test" />
                                       <entry key="theme" value="CUSTOM" />
-                                      <entry key="themeColor" value="e50b15" />
-                                    </map>
-                                  </option>
-                                </PersistentState>
-                              </value>
-                            </entry>
-                            <entry key="launcherLegacy">
-                              <value>
-                                <PersistentState>
-                                  <option name="values">
-                                    <map>
-                                      <entry key="assetType" value="IMAGE" />
-                                      <entry key="iconShape" value="NONE" />
-                                      <entry key="imageAsset" value="C:\Users\tommy\AndroidStudioProjects\CareFeed\app\src\main\res\drawable-v24\carefeed_logo.png" />
+                                      <entry key="themeColor" value="ffffff" />
                                     </map>
                                   </option>
                                 </PersistentState>
@@ -73,7 +71,7 @@
                         </option>
                         <option name="values">
                           <map>
-                            <entry key="outputIconType" value="LAUNCHER_LEGACY" />
+                            <entry key="outputIconType" value="ACTIONBAR" />
                           </map>
                         </option>
                       </PersistentState>

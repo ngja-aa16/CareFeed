@@ -1,9 +1,13 @@
 package com.carefeed.android.carefeed;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.graphics.BitmapCompat;
+import android.support.v4.view.PointerIconCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -28,7 +32,9 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.squareup.picasso.Picasso;
 
+import java.io.ByteArrayOutputStream;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -90,7 +96,7 @@ public class CreatePostActivity extends AppCompatActivity {
 
         if(requestCode == GALLERY_PICK && resultCode == RESULT_OK && data != null){
             imageUri = data.getData();
-            uploadImageButton.setImageURI(imageUri);
+            Picasso.get().load(imageUri).into(uploadImageButton);
         }
     }
 

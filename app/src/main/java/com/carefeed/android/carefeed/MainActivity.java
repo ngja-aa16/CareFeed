@@ -107,7 +107,7 @@ public class MainActivity extends AppCompatActivity {
                 intent.putExtra("age", currentLoginUser.getAge());
                 intent.putExtra("introduction", currentLoginUser.getIntroduction());
                 intent.putExtra("username", currentLoginUser.getUsername());
-                intent.putExtra("profileImage", currentLoginUser.getProfileImage());
+                intent.putExtra("profileImage", currentLoginUser.getProfile_image());
                 intent.putExtra("isLoginUser", true);
                 startActivity(intent);
                 return true;
@@ -235,7 +235,7 @@ public class MainActivity extends AppCompatActivity {
                         Picasso.get()
                                 .load(image).transform(new CropCircleTransformation()).resize(100, 100).centerCrop()
                                 .into(homeIndicatorTarget);
-                        currentLoginUser.setProfileImage(image);
+                        currentLoginUser.setProfile_image(image);
                         loadingBar.dismiss();
                     }
                 }
@@ -246,7 +246,7 @@ public class MainActivity extends AppCompatActivity {
                 }
             });
         } else {
-            currentLoginUser.setProfileImage("");
+            currentLoginUser.setProfile_image("");
             Picasso.get().load(R.drawable.profile).transform(new CropCircleTransformation()).resize(100, 100).centerCrop().into(homeIndicatorTarget);
             loadingBar.dismiss();
         }

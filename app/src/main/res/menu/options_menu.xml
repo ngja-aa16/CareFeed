@@ -6,15 +6,15 @@
         android:title="Setting"
         android:id="@+id/menu_setting"
         app:showAsAction="ifRoom"
-        android:icon="@drawable/settings">
-
+        android:icon="@drawable/setting_white"
+        >
     </item>
 
     <item
         android:title="Logout"
         android:id="@+id/menu_logout"
         app:showAsAction="ifRoom"
-        android:icon="@drawable/logout">
+        android:icon="@drawable/lougot_white">
 
     </item>
 </menu>
