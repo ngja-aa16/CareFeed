@@ -19,7 +19,5 @@
     <string name="new_password_hint">Incorrect password.</string>
     <string name="hint_old_password">Old Password</string>
     <string name="txt_incorrect_password">Incorrect Password</string>
-
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
