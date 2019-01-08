@@ -216,7 +216,13 @@ public class FriendFragment extends Fragment {
                             holder.mChat.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
-                                    Toast.makeText(getContext(), "Chat", Toast.LENGTH_SHORT).show();
+                                    Intent chatIntent = new Intent(getContext(), ChatActivity.class);
+                                    chatIntent.putExtra("visit_user_id", dataSnapshot.getKey().toString());
+                                    chatIntent.putExtra("username", username);
+                                    if(profileImage != null)
+                                        chatIntent.putExtra("profileImage", profileImage);
+                                    else
+                                        chatIntent.putExtra("profileImage", profileImage);
                                 }
                             });
 
