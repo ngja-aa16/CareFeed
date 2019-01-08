@@ -113,12 +113,12 @@ public class CreatePostActivity extends AppCompatActivity {
     }
 
     private void StoreImageToFirebase() {
-        Calendar calDate = Calendar.getInstance(Locale.ENGLISH);
-        SimpleDateFormat currentDate = new SimpleDateFormat("dd-MMM-yyyy");
+        Calendar calDate = Calendar.getInstance();
+        SimpleDateFormat currentDate = new SimpleDateFormat("dd-MMM-yyyy", Locale.ENGLISH);
         currentDateString = currentDate.format(calDate.getTime());
 
-        Calendar calTime = Calendar.getInstance(Locale.ENGLISH);
-        SimpleDateFormat currentTime = new SimpleDateFormat("HH:mm");
+        Calendar calTime = Calendar.getInstance();
+        SimpleDateFormat currentTime = new SimpleDateFormat("HH:mm", Locale.ENGLISH);
         currentTimeString = currentTime.format(calTime.getTime());
 
         StorageReference filePath = postImagesReference.child(imageUri.getLastPathSegment() + currentDateString + currentTimeString + ".jpg");

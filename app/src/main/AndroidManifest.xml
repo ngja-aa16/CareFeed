@@ -84,9 +84,9 @@
         <activity
             android:name=".FullScreenActivity"
             android:parentActivityName=".MainActivity" />
-
-        <activity android:name=".PostDetail"
-            android:parentActivityName=".MainActivity"/>
+        <activity
+            android:name=".PostDetail"
+            android:parentActivityName=".MainActivity" />
     </application>
 
 </manifest>

@@ -208,7 +208,6 @@ public class PostsFragment extends Fragment {
             @NonNull
             @Override
             public PostViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
-                Log.d("onCreateViewHolder", "onCreateViewHolder");
                 View view = LayoutInflater.from(getContext()).inflate(R.layout.users_post_layout, viewGroup,  false);
                 PostViewHolder viewHolder = new PostViewHolder(view);
                 userPostList.getLayoutManager().onRestoreInstanceState(listState);

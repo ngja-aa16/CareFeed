@@ -60,9 +60,9 @@ public class MainActivity extends AppCompatActivity {
                     selectedFragment = new PostsFragment();
                     getSupportActionBar().setTitle("Posts");
                     break;
-                case R.id.menu_bottom_chats:
-                    selectedFragment = new ChatsFragment();
-                    getSupportActionBar().setTitle("Chats");
+                case R.id.menu_bottom_friends:
+                    selectedFragment = new FriendFragment();
+                    getSupportActionBar().setTitle("Friends");
                     break;
             }
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, selectedFragment).commit();
@@ -110,10 +110,6 @@ public class MainActivity extends AppCompatActivity {
                 intent.putExtra("username", currentLoginUser.getUsername());
                 intent.putExtra("profileImage", currentLoginUser.getProfile_image());
                 intent.putExtra("isLoginUser", true);
-                startActivity(intent);
-                return true;
-            case R.id.menu_search:
-                intent = new Intent(MainActivity.this, SearchUserActivity.class);
                 startActivity(intent);
                 return true;
             case R.id.menu_setting:

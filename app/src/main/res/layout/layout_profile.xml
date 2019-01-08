@@ -5,7 +5,9 @@
 
     <include
         android:id="@+id/profile_page_toolbar"
-        layout="@layout/app_bar_layout"></include>
+        layout="@layout/app_bar_layout">
+
+    </include>
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/profile_picture"
@@ -26,7 +28,6 @@
         android:textSize="17sp"
         android:textColor="@color/black"
         android:textStyle="bold"
-        android:layout_marginBottom="8dp"
         android:padding="8dp"
         android:id="@+id/txt_username" />
 
@@ -35,35 +36,53 @@
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:layout_below="@+id/txt_username"
-        android:text="This user is too lazy to write something on his/her introduction."
+        android:text="User Introduction."
         android:textSize="16sp"
         android:textAlignment="center"
         android:textColor="@color/black"
         android:paddingLeft="25dp"
         android:paddingRight="25dp"
-        android:layout_marginBottom="20dp"
         android:id="@+id/txt_intro"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/txt_intro"
+        android:background="@drawable/white_rounded_button"
+        android:text="Send Friend Request"
+        android:paddingLeft="12dp"
+        android:paddingRight="12dp"
+        android:layout_centerHorizontal="true"
+        android:id="@+id/btn_friend_request"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/btn_friend_request"
+        android:background="@drawable/red_rounded_button"
+        android:text="Decline Friend Request"
+        android:textColor="@color/white"
+        android:paddingLeft="12dp"
+        android:paddingRight="12dp"
+        android:layout_centerHorizontal="true"
+        android:id="@+id/btn_decline_request"
+        />
 
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:background="@android:color/darker_gray"
         android:id="@+id/separate_line"
-        android:layout_below="@id/txt_intro"/>
-
-    <GridLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/separate_line">
-
-
-
-    </GridLayout>
+        android:layout_below="@+id/btn_decline_request"
+        android:layout_marginTop="8dp"/>
 
     <ProgressBar
         android:layout_width="80dp"
         android:layout_height="80dp"
         android:id="@+id/progress_bar"
-        android:layout_centerInParent="true"/>
+        android:layout_centerInParent="true" />
 
 </RelativeLayout>

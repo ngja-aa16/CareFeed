@@ -11,8 +11,9 @@
         android:id="@+id/menu_bottom_posts"
         android:icon="@drawable/find_people"></item>
 
+
     <item
-        android:title="Chats"
-        android:id="@+id/menu_bottom_chats"
-        android:icon="@drawable/messages"></item>
+        android:title="Friends"
+        android:id="@+id/menu_bottom_friends"
+        android:icon="@drawable/friend"></item>
 </menu>
