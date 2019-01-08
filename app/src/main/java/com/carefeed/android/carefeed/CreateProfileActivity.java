@@ -146,7 +146,7 @@ public class CreateProfileActivity extends AppCompatActivity {
                 if(!checkNull(username, age, intro)) {
                     mProgressBar.setVisibility(View.VISIBLE);
 
-                    Map newPost = new HashMap();
+                    final Map newPost = new HashMap();
                     newPost.put("username", username);
                     newPost.put("age", age);
                     newPost.put("introduction", intro);
@@ -169,6 +169,21 @@ public class CreateProfileActivity extends AppCompatActivity {
 
                                             //Add image url to profile firebase
                                             userDb.child("profile_image").setValue(downloadUrl);
+                                            //Update profile info to profile firebase
+
+                                            userDb.updateChildren(newPost).addOnCompleteListener(new OnCompleteListener() {
+                                                @Override
+                                                public void onComplete(@NonNull Task task) {
+
+                                                    //On complete, send user to main activity
+                                                    mProgressBar.setVisibility(View.GONE);
+                                                    Toast.makeText(CreateProfileActivity.this, "Create Profile Successful",
+                                                            Toast.LENGTH_SHORT).show();
+                                                    Intent intent = new Intent(CreateProfileActivity.this, MainActivity.class);
+                                                    finish();
+                                                    startActivity(intent);
+                                                }
+                                            });
                                         }
                                     });
                                 } else {
@@ -176,22 +191,22 @@ public class CreateProfileActivity extends AppCompatActivity {
                                 }
                             }
                         });
+                    } else {
+                        //Update profile info to profile firebase
+                        userDb.updateChildren(newPost).addOnCompleteListener(new OnCompleteListener() {
+                            @Override
+                            public void onComplete(@NonNull Task task) {
+
+                                //On complete, send user to main activity
+                                mProgressBar.setVisibility(View.GONE);
+                                Toast.makeText(CreateProfileActivity.this, "Create Profile Successful",
+                                        Toast.LENGTH_SHORT).show();
+                                Intent intent = new Intent(CreateProfileActivity.this, MainActivity.class);
+                                finish();
+                                startActivity(intent);
+                            }
+                        });
                     }
-
-                    //Update profile info to profile firebase
-                    userDb.updateChildren(newPost).addOnCompleteListener(new OnCompleteListener() {
-                        @Override
-                        public void onComplete(@NonNull Task task) {
-
-                            //On complete, send user to main activity
-                            mProgressBar.setVisibility(View.GONE);
-                            Toast.makeText(CreateProfileActivity.this, "Create Profile Successful",
-                                    Toast.LENGTH_SHORT).show();
-                            Intent intent = new Intent(CreateProfileActivity.this, MainActivity.class);
-                            finish();
-                            startActivity(intent);
-                        }
-                    });
                 }
             }
         });
