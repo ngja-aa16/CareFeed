@@ -1,5 +1,6 @@
 package com.carefeed.android.carefeed;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -18,6 +19,8 @@ import android.widget.TextView;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
+import com.google.android.gms.auth.api.Auth;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -36,6 +39,7 @@ public class SearchUserActivity extends AppCompatActivity {
     private TextView mResult;
 
     private DatabaseReference userRef;
+    private FirebaseAuth mAuth;
     private FirebaseRecyclerAdapter<User, UserViewHolder> adapter;
 
     @Override
@@ -56,12 +60,13 @@ public class SearchUserActivity extends AppCompatActivity {
         getSupportActionBar().setTitle("Search User");
 
         userRef = FirebaseDatabase.getInstance().getReference().child("User_Info");
+        mAuth = FirebaseAuth.getInstance();
     }
 
     @Override
     public void onStart(){
         super.onStart();
-
+        Log.d("searchUser", "onStart");
         mSearch.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -95,13 +100,37 @@ public class SearchUserActivity extends AppCompatActivity {
 
                     adapter = new FirebaseRecyclerAdapter<User, UserViewHolder>(options) {
                         @Override
-                        protected void onBindViewHolder(@NonNull UserViewHolder holder, int position, @NonNull User model) {
+                        protected void onBindViewHolder(@NonNull UserViewHolder holder, final int position, @NonNull final User model) {
                             mResult.setVisibility(View.GONE);
 
                             holder.username.setText(model.getUsername());
-                            String profile_image = model.getProfile_image();
+                            final String profile_image = model.getProfile_image();
                             if (profile_image != null)
                                 Picasso.get().load(model.getProfile_image()).into(holder.profileImage);
+
+                            holder.linearLayout.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    Intent intent = new Intent(SearchUserActivity.this, ProfileActivity.class);
+                                    String userID = getRef(position).getKey();
+                                    if(mAuth.getCurrentUser().getUid().equals(userID)){
+                                        intent.putExtra("isLoginUser", true);
+                                    }
+                                    else{
+                                        intent.putExtra("isLoginUser", false);
+                                    }
+                                    intent.putExtra("visit_user_id", getRef(position).getKey());
+                                    intent.putExtra("username", model.getUsername());
+                                    intent.putExtra("age", model.getAge());
+                                    intent.putExtra("introduction", model.getIntroduction());
+                                    if(profile_image != null)
+                                        intent.putExtra("profileImage", model.getProfile_image());
+                                    else
+                                        intent.putExtra("profileImage", "");
+
+                                    startActivity(intent);
+                                }
+                            });
                         }
 
                         @NonNull
@@ -130,11 +159,11 @@ public class SearchUserActivity extends AppCompatActivity {
 
         CircleImageView profileImage;
         TextView username;
-        LinearLayout linearLayout;
+        View linearLayout;
 
         public UserViewHolder(View itemView){
             super(itemView);
-            linearLayout = itemView.findViewById(R.id.linear_layout);
+            linearLayout = itemView;
             profileImage = itemView.findViewById(R.id.profile_picture);
             username = itemView.findViewById(R.id.txt_username);
         }
