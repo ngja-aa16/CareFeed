@@ -7,14 +7,14 @@
     tools:context=".SearchUserActivity">
 
     <include
-        android:id="@+id/profile_page_toolbar"
+        android:id="@+id/search_page_toolbar"
         layout="@layout/app_bar_layout">
     </include>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/profile_page_toolbar"
+        android:layout_below="@id/search_page_toolbar"
         android:id="@+id/user_linear_layout"
         android:layout_marginTop="10dp"
         android:paddingLeft="8dp"
