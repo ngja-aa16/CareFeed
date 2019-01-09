@@ -1,4 +1,4 @@
 package com.carefeed.android.carefeed;
 
-public class Friends {
+public class Message {
 }

@@ -41,13 +41,15 @@ import de.hdodenhof.circleimageview.CircleImageView;
  */
 public class PostsFragment extends Fragment {
     private RecyclerView userPostList;
-    private DatabaseReference postRef, userRef;
+    private DatabaseReference postRef, userRef, likeRef;
+    private boolean likeCheck = false;
     private String currentLoginUserId;
     private FirebaseRecyclerAdapter<Post, PostViewHolder> firebaseRecyclerAdapter;
     private Query query;
     LinearLayoutManager linearLayoutManager;
 
     private Parcelable listState;
+    private static final int CREATE_POST_ACTIVITY = 1;
 
     public PostsFragment() {
         // Required empty public constructor
@@ -75,6 +77,7 @@ public class PostsFragment extends Fragment {
         postRef = FirebaseDatabase.getInstance().getReference().child("Post_Info");
         query = postRef.orderByKey();
         userRef = FirebaseDatabase.getInstance().getReference().child("User_Info");
+        likeRef = FirebaseDatabase.getInstance().getReference().child("Post_Like");
 
         currentLoginUserId = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
@@ -88,6 +91,8 @@ public class PostsFragment extends Fragment {
             protected void onBindViewHolder(@NonNull final PostViewHolder holder, int position, @NonNull Post model) {
                 holder.loadingBar.setVisibility(View.VISIBLE);
                 final String postIDs = getRef(position).getKey();
+
+                holder.setLikeButtonStatus(postIDs);
 
                 Log.d("onBindViewHolder", "onBindViewHolder");
                 postRef.child(postIDs).addValueEventListener(new ValueEventListener() {
@@ -121,69 +126,103 @@ public class PostsFragment extends Fragment {
                             @Override
                             public void onDataChange(@NonNull final DataSnapshot dataSnapshot) {
 
-                                final String username = dataSnapshot.child("username").getValue().toString();
-                                holder.profileUsername.setText(username);
-                                if (dataSnapshot.hasChild("profile_image")) {
-                                    Picasso.get().load(dataSnapshot.child("profile_image").getValue().toString()).into(holder.profileImage);
+                                if(dataSnapshot.exists()){
+                                    final String username = dataSnapshot.child("username").getValue().toString();
+                                    final String age = dataSnapshot.child("age").getValue().toString();
+                                    final String introduction = dataSnapshot.child("introduction").getValue().toString();
+
+                                    holder.profileUsername.setText(username);
+                                    if (dataSnapshot.hasChild("profile_image")) {
+                                        Picasso.get().load(dataSnapshot.child("profile_image").getValue().toString()).into(holder.profileImage);
+                                    }
+
+                                    holder.profileImage.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                            Intent profileIntent = new Intent(getContext(), ProfileActivity.class);
+                                            profileIntent.putExtra("username", username);
+                                            profileIntent.putExtra("age", age);
+                                            profileIntent.putExtra("introduction", introduction);
+                                            if (currentLoginUserId.equals(userID)) {
+                                                Log.d("loginUser", "true");
+                                                profileIntent.putExtra("isLoginUser", true);
+                                            } else {
+                                                Log.d("loginUser", "false");
+                                                profileIntent.putExtra("isLoginUser", false);
+                                            }
+                                            if (dataSnapshot.hasChild("profile_image")) {
+                                                profileIntent.putExtra("profileImage", dataSnapshot.child("profile_image").getValue().toString());
+                                            } else {
+                                                profileIntent.putExtra("profileImage", "");
+                                            }
+                                            startActivity(profileIntent);
+                                        }
+                                    });
+
+                                    holder.postImage.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                            Intent fullScreenIntent = new Intent(getContext(), FullScreenActivity.class);
+                                            fullScreenIntent.putExtra("postImage", postImage);
+                                            startActivity(fullScreenIntent);
+                                        }
+                                    });
+
+                                    holder.recyclerView.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                            Intent postDetailIntent = new Intent(getContext(), PostDetail.class);
+                                            if (currentLoginUserId.equals(userID)) {
+                                                Log.d("loginUser", "true");
+                                                postDetailIntent.putExtra("isLoginUser", true);
+                                            } else {
+                                                Log.d("loginUser", "false");
+                                                postDetailIntent.putExtra("isLoginUser", false);
+                                            }
+                                            if (dataSnapshot.hasChild("profile_image")) {
+                                                postDetailIntent.putExtra("profileImage", dataSnapshot.child("profile_image").getValue().toString());
+                                            } else {
+                                                postDetailIntent.putExtra("profileImage", "");
+                                            }
+                                            postDetailIntent.putExtra("postID", postIDs);
+                                            postDetailIntent.putExtra("username", username);
+                                            postDetailIntent.putExtra("date", date);
+                                            postDetailIntent.putExtra("time", time);
+                                            postDetailIntent.putExtra("description", description);
+                                            postDetailIntent.putExtra("postImage", postImage);
+                                            postDetailIntent.putExtra("age", age);
+                                            postDetailIntent.putExtra("introduction", introduction);
+                                            startActivity(postDetailIntent);
+                                        }
+                                    });
+
+                                    holder.likeArea.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                            likeCheck = true;
+                                            likeRef.addValueEventListener(new ValueEventListener() {
+                                                @Override
+                                                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                                    if(likeCheck){
+                                                        if(dataSnapshot.child(postIDs).hasChild(currentLoginUserId)){
+                                                            likeRef.child(postIDs).child(currentLoginUserId).removeValue();
+                                                            likeCheck = false;
+                                                        } else {
+                                                            likeRef.child(postIDs).child(currentLoginUserId).setValue(true);
+                                                            likeCheck = false;
+                                                        }
+                                                    }
+                                                }
+
+                                                @Override
+                                                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                                }
+                                            });
+                                        }
+                                    });
                                 }
 
-                                holder.profileImage.setOnClickListener(new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View v) {
-                                        Intent profileIntent = new Intent(getContext(), ProfileActivity.class);
-                                        profileIntent.putExtra("username", username);
-                                        profileIntent.putExtra("age", dataSnapshot.child("age").getValue().toString());
-                                        profileIntent.putExtra("introduction", dataSnapshot.child("introduction").getValue().toString());
-                                        if (currentLoginUserId.equals(userID)) {
-                                            Log.d("loginUser", "true");
-                                            profileIntent.putExtra("isLoginUser", true);
-                                        } else {
-                                            Log.d("loginUser", "false");
-                                            profileIntent.putExtra("isLoginUser", false);
-                                        }
-                                        if (dataSnapshot.hasChild("profile_image")) {
-                                            profileIntent.putExtra("profileImage", dataSnapshot.child("profile_image").getValue().toString());
-                                        } else {
-                                            profileIntent.putExtra("profileImage", "");
-                                        }
-                                        startActivity(profileIntent);
-                                    }
-                                });
-
-                                holder.postImage.setOnClickListener(new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View v) {
-                                        Intent fullScreenIntent = new Intent(getContext(), FullScreenActivity.class);
-                                        fullScreenIntent.putExtra("postImage", postImage);
-                                        startActivity(fullScreenIntent);
-                                    }
-                                });
-
-                                holder.recyclerView.setOnClickListener(new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View v) {
-                                        Intent postDetailIntent = new Intent(getContext(), PostDetail.class);
-                                        if (currentLoginUserId.equals(userID)) {
-                                            Log.d("loginUser", "true");
-                                            postDetailIntent.putExtra("isLoginUser", true);
-                                        } else {
-                                            Log.d("loginUser", "false");
-                                            postDetailIntent.putExtra("isLoginUser", false);
-                                        }
-                                        if (dataSnapshot.hasChild("profile_image")) {
-                                            postDetailIntent.putExtra("profileImage", dataSnapshot.child("profile_image").getValue().toString());
-                                        } else {
-                                            postDetailIntent.putExtra("profileImage", "");
-                                        }
-                                        postDetailIntent.putExtra("postID", postIDs);
-                                        postDetailIntent.putExtra("username", username);
-                                        postDetailIntent.putExtra("date", date);
-                                        postDetailIntent.putExtra("time", time);
-                                        postDetailIntent.putExtra("description", description);
-                                        postDetailIntent.putExtra("postImage", postImage);
-                                        startActivity(postDetailIntent);
-                                    }
-                                });
 
                             }
 
@@ -210,7 +249,6 @@ public class PostsFragment extends Fragment {
             public PostViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
                 View view = LayoutInflater.from(getContext()).inflate(R.layout.users_post_layout, viewGroup,  false);
                 PostViewHolder viewHolder = new PostViewHolder(view);
-                userPostList.getLayoutManager().onRestoreInstanceState(listState);
                 return viewHolder;
             }
         };
@@ -222,21 +260,53 @@ public class PostsFragment extends Fragment {
 
     public class PostViewHolder extends RecyclerView.ViewHolder{
 
+        LinearLayout likeArea;
         View recyclerView;
         CircleImageView profileImage;
-        TextView profileUsername, dateTime, postDescription;
-        ImageView postImage;
+        TextView profileUsername, dateTime, postDescription, displayNoOfLikes;
+        ImageView postImage, likePostButton;
         ProgressBar loadingBar;
+        int countLikes;
+        String currentUserId;
+        DatabaseReference likeRef;
 
         public PostViewHolder(View itemView){
             super(itemView);
             recyclerView = itemView;
+            likeArea = itemView.findViewById(R.id.post_layout_like_area);
             profileImage = itemView.findViewById(R.id.view_post_profile_image);
             profileUsername = itemView.findViewById(R.id.view_post_username);
             dateTime = itemView.findViewById(R.id.view_post_date_time);
             postDescription = itemView.findViewById(R.id.view_post_description);
             postImage = itemView.findViewById(R.id.view_post_image);
             loadingBar = itemView.findViewById(R.id.post_layout_progress_bar);
+            displayNoOfLikes = itemView.findViewById(R.id.view_post_likes_no);
+            likePostButton = itemView.findViewById(R.id.view_post_like_button);
+
+            likeRef = FirebaseDatabase.getInstance().getReference().child("Post_Like");
+            currentUserId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        }
+
+        public void setLikeButtonStatus(final String postID){
+            likeRef.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    if(dataSnapshot.child(postID).hasChild(currentUserId)){
+                        countLikes = (int) dataSnapshot.child(postID).getChildrenCount();
+                        likePostButton.setImageResource(R.drawable.like);
+                        displayNoOfLikes.setText(Integer.toString(countLikes));
+                    } else {
+                        countLikes = (int) dataSnapshot.child(postID).getChildrenCount();
+                        likePostButton.setImageResource(R.drawable.dislike);
+                        displayNoOfLikes.setText(Integer.toString((countLikes)));
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                }
+            });
         }
     }
 

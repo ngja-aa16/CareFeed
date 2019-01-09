@@ -5,6 +5,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.view.View;
 import android.widget.ImageView;
 
 import com.github.chrisbanes.photoview.PhotoView;
@@ -22,5 +23,12 @@ public class FullScreenActivity extends AppCompatActivity {
         fullScreenImageView = (PhotoView) findViewById(R.id.full_screen_imageView);
 
         Picasso.get().load(getIntent().getExtras().getString("postImage")).into(fullScreenImageView);
+
+        fullScreenImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
     }
 }

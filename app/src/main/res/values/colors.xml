@@ -9,4 +9,5 @@
     <color name="dodger_blue">#1E90FF</color>
     <color name="dim_gray">#696969</color>
     <color name="red">#FF0000</color>
+    <color name="postBackground">#D7D7D7</color>
 </resources>
