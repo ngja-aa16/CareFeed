@@ -49,7 +49,6 @@ public class PostsFragment extends Fragment {
     LinearLayoutManager linearLayoutManager;
 
     private Parcelable listState;
-    private static final int CREATE_POST_ACTIVITY = 1;
 
     public PostsFragment() {
         // Required empty public constructor
