@@ -2,19 +2,28 @@ package com.carefeed.android.carefeed;
 
 public class Event {
 
-    private String title, description, date, time, image, noOfPersonJoined;
-
+    private String title, description, date, time, image, status;
+    private int noOfPersonJoined;
 
     public Event() {
     }
 
-    public Event(String title, String description, String date, String time, String image, String noOfPersonJoined) {
+    public Event(String title, String description, String date, String time, String image, int noOfPersonJoined, String status) {
         this.title = title;
         this.description = description;
         this.date = date;
         this.time = time;
         this.image = image;
         this.noOfPersonJoined = noOfPersonJoined;
+        this.status = status;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 
     public String getTitle() {
@@ -57,15 +66,11 @@ public class Event {
         this.image = image;
     }
 
-    public String getNoOfPersonJoined() {
+    public int getNoOfPersonJoined() {
         return noOfPersonJoined;
     }
 
-    public void setNoOfPersonJoined(String noOfPersonJoined) {
+    public void setNoOfPersonJoined(int noOfPersonJoined) {
         this.noOfPersonJoined = noOfPersonJoined;
-    }
-
-    public int countNoOfPersonJoined(){
-        return Integer.parseInt(noOfPersonJoined);
     }
 }

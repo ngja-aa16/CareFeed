@@ -19,8 +19,8 @@
         android:layout_alignParentRight="true"
         android:layout_alignParentBottom="true"
         android:layout_margin="15dp"
-        android:src="@drawable/add_post_high"
-        app:backgroundTint="#DC143C"
+        android:src="@drawable/add_post"
+        android:backgroundTint="@color/white"
         app:borderWidth="0dp"
         app:fabCustomSize="48dp" />
 

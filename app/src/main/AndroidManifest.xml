@@ -87,10 +87,14 @@
         <activity
             android:name=".PostDetail"
             android:parentActivityName=".MainActivity"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".ChatActivity"
-            android:screenOrientation="portrait"
-            android:parentActivityName=".MainActivity"/>
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ChatActivity"
+            android:parentActivityName=".MainActivity"
+            android:screenOrientation="portrait" />
+        <activity android:name=".RequestEventActivity"
+            android:parentActivityName=".MainActivity"
+            android:screenOrientation="portrait"></activity>
     </application>
 
 </manifest>

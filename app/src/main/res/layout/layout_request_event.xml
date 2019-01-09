@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".RequestEventActivity">
+
+    <include
+        android:id="@+id/create_event_page_toolbar"
+        layout="@layout/app_bar_layout"></include>
+
+    <ImageButton
+        android:id="@+id/create_event_upload_image_button"
+        android:layout_width="match_parent"
+        android:layout_height="350dp"
+        android:layout_below="@+id/create_event_page_toolbar"
+        android:scaleType="centerCrop"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:src="@drawable/select_image"
+        android:background="@color/white" />
+
+    <View
+        android:id="@+id/SplitLine_hor1"
+        android:layout_width="match_parent"
+        android:layout_height= "2dp"
+        android:background="@color/grey"
+        android:layout_below="@+id/create_event_upload_image_button"
+        android:layout_margin="15dp"/>
+
+    <EditText
+        android:id="@+id/create_event_title_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/SplitLine_hor1"
+        android:hint="Title"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:paddingBottom="10dp"
+        android:inputType="text"/>
+
+    <EditText
+        android:id="@+id/create_event_description_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/create_event_title_text"
+        android:layout_marginTop="15dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:hint="Write description about the post..."
+        android:inputType="textMultiLine"
+        android:background="@android:color/transparent"/>
+
+    <ProgressBar
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:id="@+id/create_event_progress_bar"
+        android:layout_centerInParent="true"
+        />
+
+</RelativeLayout>

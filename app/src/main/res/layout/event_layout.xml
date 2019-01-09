@@ -27,6 +27,7 @@
             android:textSize="12dp"/>
 
         <TextView
+            android:textIsSelectable="true"
             android:id="@+id/view_event_description"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -61,12 +62,14 @@
             android:orientation="horizontal">
 
             <Button
+                android:id="@+id/event_join_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"
                 android:text="Join"/>
 
             <TextView
+                android:id="@+id/view_event_joined_counts"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"
