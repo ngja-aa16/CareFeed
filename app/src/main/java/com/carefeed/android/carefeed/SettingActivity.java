@@ -46,6 +46,7 @@ public class SettingActivity extends AppCompatActivity {
                     mAuth.signOut();
                     finish();
                     Intent intent = new Intent(SettingActivity.this, LoginActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     startActivity(intent);
             }
         });

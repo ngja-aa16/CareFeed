@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -179,6 +180,8 @@ public class EditProfileActivity extends AppCompatActivity {
 
         if(!checkNull(username, age, intro)) {
             mProgressBar.setVisibility(View.VISIBLE);
+            getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+                    WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
             Map newPost = new HashMap();
             newPost.put("username", username);
             newPost.put("age", age);
@@ -221,6 +224,7 @@ public class EditProfileActivity extends AppCompatActivity {
                                     Log.d("Upload_Image", "Success" + downloadUrl);
                                     setResult(RESULT_OK,intent);
                                     finish();
+                                    getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
                                     mProgressBar.setVisibility(View.GONE);
                                 }
                             });

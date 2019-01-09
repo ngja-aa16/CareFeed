@@ -7,6 +7,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
@@ -127,6 +128,8 @@ public class CreateProfileActivity extends AppCompatActivity {
 
                 if(!checkNull(username, age, intro)) {
                     mProgressBar.setVisibility(View.VISIBLE);
+                    getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+                            WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
 
                     final Map newPost = new HashMap();
                     newPost.put("username", username);
@@ -159,6 +162,7 @@ public class CreateProfileActivity extends AppCompatActivity {
 
                                                     //On complete, send user to main activity
                                                     mProgressBar.setVisibility(View.GONE);
+                                                    getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
                                                     Toast.makeText(CreateProfileActivity.this, "Create Profile Successful",
                                                             Toast.LENGTH_SHORT).show();
                                                     Intent intent = new Intent(CreateProfileActivity.this, MainActivity.class);
@@ -181,6 +185,7 @@ public class CreateProfileActivity extends AppCompatActivity {
 
                                 //On complete, send user to main activity
                                 mProgressBar.setVisibility(View.GONE);
+                                getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
                                 Toast.makeText(CreateProfileActivity.this, "Create Profile Successful",
                                         Toast.LENGTH_SHORT).show();
                                 Intent intent = new Intent(CreateProfileActivity.this, MainActivity.class);

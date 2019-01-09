@@ -83,6 +83,9 @@
         <activity android:name=".SettingActivity"
             android:parentActivityName=".MainActivity"
             android:screenOrientation="portrait"/>
+        <activity android:name=".RequestEventActivity"
+            android:parentActivityName=".MainActivity"
+            android:screenOrientation="portrait"/>
     </application>
 
 </manifest>

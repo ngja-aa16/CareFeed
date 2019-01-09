@@ -1,6 +1,8 @@
 package com.carefeed.android.carefeed;
 
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -414,17 +416,24 @@ public class ProfileActivity extends AppCompatActivity {
         friendRequestRef.child(senderUID).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                Drawable green = getResources().getDrawable(R.drawable.green_rounded_button);
+                Drawable red = getResources().getDrawable(R.drawable.red_rounded_button);
+
                 if(dataSnapshot.hasChild(receiverUID)){
                     String request_type = dataSnapshot.child(receiverUID).child("request_type").getValue().toString();
 
                     if(request_type.equals("sent")){
                         currentState = "request_sent";
                         mFriendRequest.setText("Cancel Friend Request");
+                        mFriendRequest.setTextColor(Color.WHITE);
+                        mFriendRequest.setBackgroundDrawable(red);
                         mDeclineRequest.setVisibility(View.GONE);
                     }
                     else if(request_type.equals("received")){
                         currentState = "request_received";
                         mFriendRequest.setText("Accept Friend Request");
+                        mFriendRequest.setBackgroundDrawable(green);
+                        mFriendRequest.setTextColor(Color.WHITE);
                         mDeclineRequest.setVisibility(View.VISIBLE);
                         mDeclineRequest.setEnabled(true);
 
@@ -440,9 +449,12 @@ public class ProfileActivity extends AppCompatActivity {
                     friendRef.child(senderUID).addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                            Drawable red = getResources().getDrawable(R.drawable.red_rounded_button);
                             if(dataSnapshot.hasChild(receiverUID)){
                                 currentState = "friend";
                                 mFriendRequest.setText("Delete friend");
+                                mFriendRequest.setBackgroundDrawable(red);
+                                mFriendRequest.setTextColor(Color.WHITE);
 
                                 mDeclineRequest.setVisibility(View.GONE);
                             }
@@ -469,14 +481,18 @@ public class ProfileActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
                         if(task.isSuccessful()){
+                            Drawable red = getResources().getDrawable(R.drawable.red_rounded_button);
                             friendRequestRef.child(receiverUID).child(senderUID).child("request_type").setValue("received")
                                     .addOnCompleteListener(new OnCompleteListener<Void>() {
                                         @Override
                                         public void onComplete(@NonNull Task<Void> task) {
                                             if(task.isSuccessful()){
+                                                Drawable red = getResources().getDrawable(R.drawable.red_rounded_button);
                                                 mFriendRequest.setEnabled(true);
                                                 currentState = "request_sent";
                                                 mFriendRequest.setText("Cancel Friend Request");
+                                                mFriendRequest.setTextColor(Color.WHITE);
+                                                mFriendRequest.setBackgroundDrawable(red);
 
                                                 mDeclineRequest.setVisibility(View.GONE);
                                             }
@@ -493,14 +509,18 @@ public class ProfileActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
                         if(task.isSuccessful()){
+                            Drawable green = getResources().getDrawable(R.drawable.green_rounded_button);
                             friendRequestRef.child(receiverUID).child(senderUID).child("request_type").removeValue()
                                     .addOnCompleteListener(new OnCompleteListener<Void>() {
                                         @Override
                                         public void onComplete(@NonNull Task<Void> task) {
                                             if(task.isSuccessful()){
+                                                Drawable green = getResources().getDrawable(R.drawable.green_rounded_button);
                                                 mFriendRequest.setEnabled(true);
                                                 currentState = "not_friend";
                                                 mFriendRequest.setText("Send Friend Request");
+                                                mFriendRequest.setTextColor(Color.WHITE);
+                                                mFriendRequest.setBackgroundDrawable(green);
 
                                                 mDeclineRequest.setVisibility(View.GONE);
                                             }
@@ -522,6 +542,7 @@ public class ProfileActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
                         if(task.isSuccessful()){
+                            Drawable red = getResources().getDrawable(R.drawable.red_rounded_button);
                             friendRef.child(receiverUID).child(senderUID).child("date").setValue(saveCurrentDate)
                                     .addOnCompleteListener(new OnCompleteListener<Void>() {
                                         @Override
@@ -536,10 +557,13 @@ public class ProfileActivity extends AppCompatActivity {
                                                                             .addOnCompleteListener(new OnCompleteListener<Void>() {
                                                                                 @Override
                                                                                 public void onComplete(@NonNull Task<Void> task) {
+                                                                                    Drawable red = getResources().getDrawable(R.drawable.red_rounded_button);
                                                                                     if(task.isSuccessful()){
                                                                                         mFriendRequest.setEnabled(true);
                                                                                         currentState = "friend";
                                                                                         mFriendRequest.setText("Delete friend");
+                                                                                        mFriendRequest.setBackgroundDrawable(red);
+                                                                                        mFriendRequest.setTextColor(Color.WHITE);
 
                                                                                         mDeclineRequest.setVisibility(View.GONE);
                                                                                     }
@@ -566,10 +590,13 @@ public class ProfileActivity extends AppCompatActivity {
                                     .addOnCompleteListener(new OnCompleteListener<Void>() {
                                         @Override
                                         public void onComplete(@NonNull Task<Void> task) {
+                                            Drawable green = getResources().getDrawable(R.drawable.green_rounded_button);
                                             if(task.isSuccessful()){
                                                 mFriendRequest.setEnabled(true);
                                                 currentState = "not_friend";
                                                 mFriendRequest.setText("Send Friend Request");
+                                                mFriendRequest.setTextColor(Color.WHITE);
+                                                mFriendRequest.setBackgroundDrawable(green);
 
                                                 mDeclineRequest.setVisibility(View.GONE);
                                             }
