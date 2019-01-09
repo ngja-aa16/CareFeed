@@ -42,7 +42,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class ChatActivity extends AppCompatActivity {
 
     private Toolbar chatToolbar;
-    private ImageButton mSendImage, mSendText;
+    private ImageButton mSendText;
     private EditText mMessage;
     private RecyclerView mRecyclerView;
 
@@ -66,7 +66,6 @@ public class ChatActivity extends AppCompatActivity {
         profile_image = getIntent().getStringExtra("profileImage");
         receiverUID = getIntent().getStringExtra("target_user_id");
 
-        mSendImage = (ImageButton) findViewById(R.id.chat_upload_image);
         mSendText = (ImageButton) findViewById(R.id.chat_sent_button);
         mMessage = (EditText)  findViewById(R.id.chat_edit_text);
         mRecyclerView = (RecyclerView) findViewById(R.id.chat_recycler_view);
