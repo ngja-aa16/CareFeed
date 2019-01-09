@@ -134,6 +134,7 @@ public class PostDetail extends AppCompatActivity {
                 profileIntent.putExtra("introduction", user.getIntroduction());
                 profileIntent.putExtra("isLoginUser", isLoginUser);
                 profileIntent.putExtra("profileImage", user.getProfile_image());
+                profileIntent.putExtra("visit_user_id", getIntent().getExtras().getString("visit_user_id"));
                 startActivity(profileIntent);
             }
         });
@@ -226,6 +227,7 @@ public class PostDetail extends AppCompatActivity {
                                             } else {
                                                 profileIntent.putExtra("profileImage", "");
                                             }
+                                            profileIntent.putExtra("visit_user_id", dataSnapshot.getKey().toString());
                                             startActivity(profileIntent);
                                         }
                                     });
