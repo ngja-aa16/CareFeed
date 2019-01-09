@@ -239,9 +239,4 @@ public class EditProfileActivity extends AppCompatActivity {
             mProgressBar.setVisibility(View.GONE);
         }
     }
-
-    @Override
-    public void onBackPressed() {
-        NavUtils.navigateUpFromSameTask(this);
-    }
 }
