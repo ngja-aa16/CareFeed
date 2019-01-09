@@ -41,7 +41,7 @@
     <string name="please_enter_your_email_address">Please enter your email address.</string>
     <string name="comments">Comments</string>
     <string name="comment_Count">(0)</string>
-    <string name="write_comment">Write comment...</string>
+    <string name="write_comment">Write comment…</string>
     <string name="end_of_posts">End of posts</string>
     <string name="decline_friend_request">Decline Friend Request</string>
     <string name="send_friend_request">Send Friend Request</string>
@@ -49,7 +49,7 @@
     <string name="username">Username</string>
     <string name="password_does_not_match">Password does not match</string>
     <string name="title">Title</string>
-    <string name="search">Search...</string>
+    <string name="search">Search…</string>
     <string name="no_result_found">No result found</string>
     <string name="status">Status</string>
     <string name="datetime">dateTime</string>
