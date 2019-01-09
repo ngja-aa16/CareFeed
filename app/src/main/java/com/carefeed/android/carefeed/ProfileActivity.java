@@ -6,16 +6,22 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.firebase.ui.database.FirebaseRecyclerAdapter;
+import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -23,6 +29,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
@@ -37,17 +44,20 @@ public class ProfileActivity extends AppCompatActivity {
     private Toolbar mToolbar;
     private CircleImageView mImageView;
     private TextView mUsername, mIntro;
-    private ProgressBar mProgressBar;
     private Button mFriendRequest, mDeclineRequest;
     private User currentLoginUser;
-    private boolean isLoginUser;
+    private RecyclerView profilePostList;
+    private ProgressBar mLoadingBar;
+    private boolean isLoginUser, likeCheck = false;
     private static final int START_EDIT_PROFILE = 2;
 
     private String saveCurrentDate, receiverUID, senderUID, currentState;
 
     // --> Firebase
     private FirebaseAuth mAuth;
-    private DatabaseReference friendRequestRef, friendRef;
+    private FirebaseRecyclerAdapter<Post, PostViewHolder> firebaseRecyclerAdapter;
+    private DatabaseReference friendRequestRef, friendRef, postRef, userRef, likeRef;
+    private Query query;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,13 +70,22 @@ public class ProfileActivity extends AppCompatActivity {
         mFriendRequest = (Button) findViewById(R.id.btn_friend_request);
         mDeclineRequest = (Button) findViewById(R.id.btn_decline_request);
         mImageView = (CircleImageView) findViewById(R.id.profile_picture);
-        mProgressBar = (ProgressBar) findViewById(R.id.progress_bar);
-        mProgressBar.setVisibility(View.VISIBLE);
+        profilePostList = (RecyclerView) findViewById(R.id.profile_post_list) ;
+        mLoadingBar = (ProgressBar) findViewById(R.id.profile_progress_bar);
+        mLoadingBar.setVisibility(View.VISIBLE);
+
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+        linearLayoutManager.setStackFromEnd(true);
+        profilePostList.setLayoutManager(linearLayoutManager);
+        profilePostList.setNestedScrollingEnabled(false);
 
         // --> get Firebase
         mAuth = FirebaseAuth.getInstance();
         friendRequestRef = FirebaseDatabase.getInstance().getReference().child("Friend_Requests");
         friendRef = FirebaseDatabase.getInstance().getReference().child("Friend");
+        postRef = FirebaseDatabase.getInstance().getReference().child("Post_Info");
+        userRef = FirebaseDatabase.getInstance().getReference().child("User_Info");
+        likeRef = FirebaseDatabase.getInstance().getReference().child("Post_Like");
 
         currentState = "not_friend";
         senderUID = mAuth.getCurrentUser().getUid();
@@ -85,6 +104,183 @@ public class ProfileActivity extends AppCompatActivity {
         getSupportActionBar().setTitle("Profile");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
+
+        query = postRef.orderByChild("userID").equalTo(receiverUID);
+
+        FirebaseRecyclerOptions<Post> firebaseRecyclerOptions = new FirebaseRecyclerOptions.Builder<Post>().setQuery(query, Post.class).build();
+
+        firebaseRecyclerAdapter = new FirebaseRecyclerAdapter<Post, PostViewHolder>(firebaseRecyclerOptions) {
+            @Override
+            protected void onBindViewHolder(@NonNull final PostViewHolder holder, int position, @NonNull Post model) {
+                holder.loadingBar.setVisibility(View.VISIBLE);
+                final String postIDs = getRef(position).getKey();
+
+                Toast.makeText(ProfileActivity.this, postIDs, Toast.LENGTH_SHORT).show();
+
+                holder.setLikeButtonStatus(postIDs);
+
+                Log.d("onBindViewHolder", "onBindViewHolder");
+                postRef.child(postIDs).addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        if(dataSnapshot.exists()){
+
+                            final String userID = dataSnapshot.child("userID").getValue().toString();
+                            final String date = dataSnapshot.child("date").getValue().toString();
+                            final String time = dataSnapshot.child("time").getValue().toString();
+                            final String description = dataSnapshot.child("description").getValue().toString();
+                            final String postImage = dataSnapshot.child("post_image").getValue().toString();
+
+                            holder.dateTime.setText(date + " " + time);
+                            holder.postDescription.setText(description);
+                            Picasso.get().load(postImage).into(holder.postImage, new com.squareup.picasso.Callback() {
+                                @Override
+                                public void onSuccess() {
+                                    holder.loadingBar.setVisibility(View.GONE);
+                                }
+
+                                @Override
+                                public void onError(Exception e) {
+                                    holder.loadingBar.setVisibility(View.GONE);
+                                    holder.postImage.setImageResource(R.drawable.failimage);
+                                }
+                            });
+
+                            userRef.child(userID).addValueEventListener(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull final DataSnapshot dataSnapshot) {
+
+                                    if(dataSnapshot.exists()){
+                                        final String username = dataSnapshot.child("username").getValue().toString();
+                                        final String age = dataSnapshot.child("age").getValue().toString();
+                                        final String introduction = dataSnapshot.child("introduction").getValue().toString();
+
+                                        holder.profileUsername.setText(username);
+                                        if (dataSnapshot.hasChild("profile_image")) {
+                                            Picasso.get().load(dataSnapshot.child("profile_image").getValue().toString()).into(holder.profileImage);
+                                        }
+
+                                        holder.profileImage.setOnClickListener(new View.OnClickListener() {
+                                            @Override
+                                            public void onClick(View v) {
+                                                Intent profileIntent = new Intent(ProfileActivity.this, ProfileActivity.class);
+                                                profileIntent.putExtra("username", username);
+                                                profileIntent.putExtra("age", age);
+                                                profileIntent.putExtra("introduction", introduction);
+                                                if (senderUID.equals(userID)) {
+                                                    Log.d("loginUser", "true");
+                                                    profileIntent.putExtra("isLoginUser", true);
+                                                } else {
+                                                    Log.d("loginUser", "false");
+                                                    profileIntent.putExtra("isLoginUser", false);
+                                                }
+                                                if (dataSnapshot.hasChild("profile_image")) {
+                                                    profileIntent.putExtra("profileImage", dataSnapshot.child("profile_image").getValue().toString());
+                                                } else {
+                                                    profileIntent.putExtra("profileImage", "");
+                                                }
+                                                profileIntent.putExtra("visit_user_id", dataSnapshot.getKey().toString());
+                                                startActivity(profileIntent);
+                                            }
+                                        });
+
+                                        holder.postImage.setOnClickListener(new View.OnClickListener() {
+                                            @Override
+                                            public void onClick(View v) {
+                                                Intent fullScreenIntent = new Intent(ProfileActivity.this, FullScreenActivity.class);
+                                                fullScreenIntent.putExtra("postImage", postImage);
+                                                startActivity(fullScreenIntent);
+                                            }
+                                        });
+
+                                        holder.recyclerView.setOnClickListener(new View.OnClickListener() {
+                                            @Override
+                                            public void onClick(View v) {
+                                                Intent postDetailIntent = new Intent(ProfileActivity.this, PostDetail.class);
+                                                if (senderUID.equals(userID)) {
+                                                    Log.d("loginUser", "true");
+                                                    postDetailIntent.putExtra("isLoginUser", true);
+                                                } else {
+                                                    Log.d("loginUser", "false");
+                                                    postDetailIntent.putExtra("isLoginUser", false);
+                                                }
+                                                if (dataSnapshot.hasChild("profile_image")) {
+                                                    postDetailIntent.putExtra("profileImage", dataSnapshot.child("profile_image").getValue().toString());
+                                                } else {
+                                                    postDetailIntent.putExtra("profileImage", "");
+                                                }
+                                                postDetailIntent.putExtra("postID", postIDs);
+                                                postDetailIntent.putExtra("username", username);
+                                                postDetailIntent.putExtra("date", date);
+                                                postDetailIntent.putExtra("time", time);
+                                                postDetailIntent.putExtra("description", description);
+                                                postDetailIntent.putExtra("postImage", postImage);
+                                                postDetailIntent.putExtra("age", age);
+                                                postDetailIntent.putExtra("introduction", introduction);
+                                                postDetailIntent.putExtra("visit_user_id", dataSnapshot.getKey().toString());
+                                                startActivity(postDetailIntent);
+                                            }
+                                        });
+
+                                        holder.likeArea.setOnClickListener(new View.OnClickListener() {
+                                            @Override
+                                            public void onClick(View v) {
+                                                likeCheck = true;
+                                                likeRef.addValueEventListener(new ValueEventListener() {
+                                                    @Override
+                                                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                                        if(likeCheck){
+                                                            if(dataSnapshot.child(postIDs).hasChild(senderUID)){
+                                                                likeRef.child(postIDs).child(senderUID).removeValue();
+                                                                likeCheck = false;
+                                                            } else {
+                                                                likeRef.child(postIDs).child(senderUID).setValue(true);
+                                                                likeCheck = false;
+                                                            }
+                                                        }
+                                                    }
+
+                                                    @Override
+                                                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                                    }
+                                                });
+                                            }
+                                        });
+                                    }
+
+
+                                }
+
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError databaseError) {
+                                    Toast.makeText(ProfileActivity.this, "something went wrong", Toast.LENGTH_SHORT).show();
+                                    Log.d("userRefFail", "userRefFail");
+                                }
+                            });
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled (@NonNull DatabaseError databaseError){
+                        Toast.makeText(ProfileActivity.this, "something went wrong", Toast.LENGTH_SHORT).show();
+                        Log.d("postRefFail", "postRefFail");
+                    }
+
+                });
+            }
+
+            @NonNull
+            @Override
+            public PostViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
+                View view = LayoutInflater.from(ProfileActivity.this).inflate(R.layout.users_post_layout, viewGroup,  false);
+                PostViewHolder viewHolder = new PostViewHolder(view);
+                return viewHolder;
+            }
+        };
+
+        profilePostList.setAdapter(firebaseRecyclerAdapter);
+        firebaseRecyclerAdapter.startListening();
     }
 
     @Override
@@ -93,7 +289,7 @@ public class ProfileActivity extends AppCompatActivity {
         if(isLoginUser){
             menu.add(0, Menu.FIRST, Menu.NONE, "Edit").setIcon(R.drawable.ic_edit_white).setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
         }
-        mProgressBar.setVisibility(View.GONE);
+
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -162,7 +358,26 @@ public class ProfileActivity extends AppCompatActivity {
         mUsername.setText(currentLoginUser.getUsername());
         mIntro.setText(currentLoginUser.getIntroduction());
         if(!currentLoginUser.getProfile_image().equals("")){
+            mLoadingBar.setVisibility(View.GONE);
             Picasso.get().load(currentLoginUser.getProfile_image()).into(mImageView);
+            mImageView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent fullScreenIntent = new Intent(ProfileActivity.this, FullScreenActivity.class);
+                    fullScreenIntent.putExtra("postImage", currentLoginUser.getProfile_image());
+                    startActivity(fullScreenIntent);
+                }
+            });
+        } else {
+            mLoadingBar.setVisibility(View.GONE);
+            mImageView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent fullScreenIntent = new Intent(ProfileActivity.this, FullScreenActivity.class);
+                    fullScreenIntent.putExtra("postImage", R.drawable.profile);
+                    startActivity(fullScreenIntent);
+                }
+            });
         }
     }
 
@@ -365,5 +580,10 @@ public class ProfileActivity extends AppCompatActivity {
                         }
                     }
                 });
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
     }
 }
