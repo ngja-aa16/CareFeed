@@ -12,7 +12,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Friend Requests"
+            android:text="@string/friend_requests"
             android:textSize="16sp"
             android:layout_marginLeft="20dp"
             android:layout_marginTop="8dp"
@@ -44,7 +44,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Your friends"
+        android:text="@string/your_friends"
         android:textSize="16sp"
         android:layout_marginLeft="20dp"
         android:layout_marginTop="8dp"
@@ -66,7 +66,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textAlignment="center"
-        android:text="You are not alone~"
+        android:text="@string/you_are_not_alone"
         android:textSize="16sp"
         android:id="@+id/txt_no_friend"
         android:layout_below="@+id/separate_line2"

@@ -15,7 +15,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/main_page_toolbar"
-        android:layout_above="@+id/bottom_navi_bar"></FrameLayout>
+        android:layout_above="@+id/bottom_navi_bar"/>
 
     <android.support.design.widget.BottomNavigationView
         android:id="@+id/bottom_navi_bar"
@@ -23,6 +23,6 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:background="?android:attr/windowBackground"
-        app:menu="@menu/menu_nav_bottom"></android.support.design.widget.BottomNavigationView>
+        app:menu="@menu/menu_nav_bottom"/>
 
 </RelativeLayout>

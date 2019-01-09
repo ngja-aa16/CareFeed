@@ -56,8 +56,8 @@
                                   <option name="values">
                                     <map>
                                       <entry key="assetType" value="IMAGE" />
-                                      <entry key="imageAsset" value="C:\Users\tommy\Downloads\like.png" />
-                                      <entry key="outputName" value="like" />
+                                      <entry key="imageAsset" value="C:\Users\tommy\Desktop\add_post.png" />
+                                      <entry key="outputName" value="add_post" />
                                       <entry key="theme" value="CUSTOM" />
                                       <entry key="themeColor" value="d70000" />
                                     </map>

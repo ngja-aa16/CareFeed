@@ -9,7 +9,7 @@
     <android.support.v7.widget.RecyclerView
         android:id="@+id/uesr_post_list"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"></android.support.v7.widget.RecyclerView>
+        android:layout_height="wrap_content"/>
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"
@@ -19,8 +19,8 @@
         android:layout_alignParentRight="true"
         android:layout_alignParentBottom="true"
         android:layout_margin="15dp"
-        android:src="@drawable/add_post_high"
-        app:backgroundTint="#DC143C"
+        android:src="@drawable/add_post"
+        android:backgroundTint="@color/white"
         app:borderWidth="0dp"
         app:fabCustomSize="48dp" />
 

@@ -1,13 +1,9 @@
 package com.carefeed.android.carefeed;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.graphics.BitmapCompat;
-import android.support.v4.view.PointerIconCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -34,7 +30,6 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
 
-import java.io.ByteArrayOutputStream;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -49,7 +44,6 @@ public class CreatePostActivity extends AppCompatActivity {
     private Toolbar topToolbar;
     private Uri imageUri;
 
-    private FirebaseAuth firebaseAuth;
     private DatabaseReference userReference, postReference;
     private StorageReference postImagesReference;
 
@@ -83,7 +77,7 @@ public class CreatePostActivity extends AppCompatActivity {
             }
         });
 
-        firebaseAuth = FirebaseAuth.getInstance();
+        FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
         currentUserId = firebaseAuth.getCurrentUser().getUid();
         userReference = FirebaseDatabase.getInstance().getReference().child("User_Info");
         postReference = FirebaseDatabase.getInstance().getReference().child("Post_Info");

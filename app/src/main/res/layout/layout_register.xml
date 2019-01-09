@@ -78,12 +78,13 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@android:color/holo_red_light"
-            android:text="Password does not match"
+            android:text="@string/password_does_not_match"
             android:id="@+id/password_match_hint"
             android:visibility="gone"
             android:textSize="15sp"
             android:layout_marginBottom="8dp"
-            android:paddingLeft="6dp" />
+            android:paddingLeft="6dp"
+            android:paddingStart="6dp" />
 
 
         <android.support.v7.widget.AppCompatButton
