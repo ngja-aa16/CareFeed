@@ -13,6 +13,41 @@
         android:src="@drawable/profile"
         android:id="@+id/message_receiver_profile"/>
 
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toEndOf="@+id/message_receiver_profile"
+        android:layout_toRightOf="@+id/message_receiver_profile"
+        android:layout_marginTop="2dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginStart="5dp"
+        android:layout_marginEnd="30dp"
+        android:layout_marginRight="30dp"
+        android:background="@drawable/receiver_message"
+        android:id="@+id/message_receiver_relative">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:maxWidth="350dp"
+            android:maxHeight="400dp"
+            android:adjustViewBounds="true"
+            android:padding="3dp"
+            android:layout_alignParentTop="true"
+            android:src="@drawable/ic_image_gray"
+            android:id="@+id/message_receiver_image"
+            android:scaleType="centerCrop"
+            />
+
+        <ProgressBar
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:id="@+id/chat_receiver_progress_bar"
+            android:layout_centerInParent="true"
+            android:visibility="gone"
+            />
+    </RelativeLayout>
+
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -33,6 +68,40 @@
         android:id="@+id/message_receiver_message"
         android:layout_marginStart="5dp"
         android:layout_marginEnd="30dp" />
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="2dp"
+        android:layout_marginLeft="40dp"
+        android:layout_marginStart="40dp"
+        android:layout_marginEnd="2dp"
+        android:layout_marginRight="2dp"
+        android:background="@drawable/sender_message"
+        android:id="@+id/message_sender_relative">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:maxWidth="350dp"
+            android:maxHeight="400dp"
+            android:adjustViewBounds="true"
+            android:padding="3dp"
+            android:src="@drawable/ic_image_gray"
+            android:id="@+id/message_sender_image"
+            android:scaleType="centerCrop"
+            />
+
+        <ProgressBar
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:id="@+id/chat_sender_progress_bar"
+            android:layout_centerInParent="true"
+            android:visibility="gone"
+            />
+    </RelativeLayout>
 
     <TextView
         android:layout_width="wrap_content"

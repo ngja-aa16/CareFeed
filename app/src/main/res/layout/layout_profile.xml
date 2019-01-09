@@ -5,10 +5,10 @@
     android:orientation="vertical">
 
     <include
-        android:id="@+id/profile_page_toolbar"
-        layout="@layout/app_bar_layout">
+    android:id="@+id/profile_page_toolbar"
+    layout="@layout/app_bar_layout">
 
-    </include>
+</include>
 
     <android.support.v4.widget.NestedScrollView
         android:layout_width="fill_parent"
@@ -58,10 +58,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/txt_intro"
-            android:background="@drawable/white_rounded_button"
+            android:background="@drawable/green_rounded_button"
             android:text="Send Friend Request"
             android:paddingLeft="12dp"
             android:paddingRight="12dp"
+            android:textColor="@color/white"
             android:layout_centerHorizontal="true"
             android:id="@+id/btn_friend_request"
             android:layout_marginTop="8dp"
