@@ -39,7 +39,7 @@ public class FriendFragment extends Fragment {
     private FloatingActionButton fab;
     private RecyclerView friendList, friendRequestList;
     private TextView mNoFriend;
-    private String uid;
+    private String currentLoginUserId;
 
     private DatabaseReference friendRef, userRef, friendRequestRef;
     private FirebaseRecyclerAdapter<Friends, FriendViewHolder> friendAdapter;
@@ -83,10 +83,10 @@ public class FriendFragment extends Fragment {
 
         // Firebase
         mAuth = FirebaseAuth.getInstance();
-        uid = mAuth.getCurrentUser().getUid();
-        friendRef = FirebaseDatabase.getInstance().getReference().child("Friend").child(uid);
+        currentLoginUserId = mAuth.getCurrentUser().getUid();
+        friendRef = FirebaseDatabase.getInstance().getReference().child("Friend").child(currentLoginUserId);
         userRef = FirebaseDatabase.getInstance().getReference().child("User_Info");
-        friendRequestRef = FirebaseDatabase.getInstance().getReference().child("Friend_Requests").child(uid);
+        friendRequestRef = FirebaseDatabase.getInstance().getReference().child("Friend_Requests").child(currentLoginUserId);
 
         DisplayFriendRequests();
         DisplayAllFriends();
@@ -134,7 +134,7 @@ public class FriendFragment extends Fragment {
                                             @Override
                                             public void onClick(View v) {
                                                 Intent intent = new Intent(getContext(), ProfileActivity.class);
-                                                if (uid.equals(userID)) {
+                                                if (currentLoginUserId.equals(userID)) {
                                                     intent.putExtra("isLoginUser", true);
                                                 } else {
                                                     intent.putExtra("isLoginUser", false);
@@ -210,13 +210,24 @@ public class FriendFragment extends Fragment {
                             Log.d("DisplayFriends", "Snapshot Exist");
                             final String username = dataSnapshot.child("username").getValue().toString();
                             final String profileImage = dataSnapshot.child("profile_image").getValue().toString();
+                            final String uid = dataSnapshot.getKey();
+
+
 
                             mNoFriend.setVisibility(View.GONE);
                             holder.mChat.setVisibility(View.VISIBLE);
                             holder.mChat.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
-                                    Toast.makeText(getContext(), "Chat", Toast.LENGTH_SHORT).show();
+                                    Intent chatIntent = new Intent(getContext(), ChatActivity.class);
+                                    chatIntent.putExtra("target_user_id", uid);
+                                    chatIntent.putExtra("username", username);
+                                    if(profileImage != null)
+                                        chatIntent.putExtra("profileImage", profileImage);
+                                    else
+                                        chatIntent.putExtra("profileImage", "");
+                                    Log.d("ChatUser", "" + uid + username + profileImage);
+                                    startActivity(chatIntent);
                                 }
                             });
 
@@ -230,12 +241,7 @@ public class FriendFragment extends Fragment {
                                 @Override
                                 public void onClick(View v) {
                                     Intent intent = new Intent(getContext(), ProfileActivity.class);
-                                    if(uid.equals(userID)){
-                                        intent.putExtra("isLoginUser", true);
-                                    }
-                                    else{
-                                        intent.putExtra("isLoginUser", false);
-                                    }
+                                    intent.putExtra("isLoginUser", false);
                                     intent.putExtra("visit_user_id", dataSnapshot.getKey().toString());
                                     intent.putExtra("username", username);
                                     intent.putExtra("age", dataSnapshot.child("age").getValue().toString());

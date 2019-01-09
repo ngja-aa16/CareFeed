@@ -49,7 +49,7 @@ public class SearchUserActivity extends AppCompatActivity {
 
         friendList = (RecyclerView) findViewById(R.id.recycler_friend);
         friendList.setLayoutManager(new LinearLayoutManager(this));
-        mToolbar = (Toolbar) findViewById(R.id.main_app_bar);
+        mToolbar = (Toolbar) findViewById(R.id.search_page_toolbar);
         mSearch = (EditText) findViewById(R.id.txt_search_user);
         mResult = (TextView) findViewById(R.id.result_not_found);
 
