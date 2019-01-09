@@ -115,8 +115,6 @@ public class ProfileActivity extends AppCompatActivity {
                 holder.loadingBar.setVisibility(View.VISIBLE);
                 final String postIDs = getRef(position).getKey();
 
-                Toast.makeText(ProfileActivity.this, postIDs, Toast.LENGTH_SHORT).show();
-
                 holder.setLikeButtonStatus(postIDs);
 
                 Log.d("onBindViewHolder", "onBindViewHolder");

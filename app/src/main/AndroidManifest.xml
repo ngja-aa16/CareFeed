@@ -86,8 +86,11 @@
             android:parentActivityName=".MainActivity" />
         <activity
             android:name=".PostDetail"
-            android:parentActivityName=".MainActivity" />
-        <activity android:name=".ChatActivity"></activity>
+            android:parentActivityName=".MainActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".ChatActivity"
+            android:screenOrientation="portrait"
+            android:parentActivityName=".MainActivity"/>
     </application>
 
 </manifest>
