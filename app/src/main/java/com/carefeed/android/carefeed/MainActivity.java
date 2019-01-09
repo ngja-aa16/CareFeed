@@ -102,7 +102,6 @@ public class MainActivity extends AppCompatActivity {
         Intent intent;
         switch(item.getItemId()){
             case android.R.id.home:
-                Toast.makeText(this, "Profile", Toast.LENGTH_SHORT).show();
                 intent = new Intent(MainActivity.this, ProfileActivity.class);
                 intent.putExtra("age", currentLoginUser.getAge());
                 intent.putExtra("introduction", currentLoginUser.getIntroduction());
@@ -112,12 +111,8 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
                 return true;
             case R.id.menu_setting:
-                intent = new Intent(MainActivity.this, ChangePasswordActivity.class);
+                intent = new Intent(MainActivity.this, SettingActivity.class);
                 startActivity(intent);
-                return true;
-            case R.id.menu_logout:
-                Toast.makeText(this, "Logout", Toast.LENGTH_SHORT).show();
-                logOut();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -128,13 +123,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         retrieveInfoFromDatabase();
-    }
-
-    private void logOut() {
-        mAuth.signOut();
-        finish();
-        Intent intent = new Intent(this, LoginActivity.class);
-        startActivity(intent);
     }
 
     // ---------------------- Firebase -----------------------

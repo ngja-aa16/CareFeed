@@ -20,7 +20,9 @@
         android:layout_below="@+id/chat_page_toolbar"
         android:id="@+id/chat_recycler_view"
         android:layout_centerHorizontal="true"
-        android:layout_margin="10dp"/>
+        android:layout_margin="10dp">
+
+    </android.support.v7.widget.RecyclerView>
 
     <View
         android:layout_width="match_parent"
@@ -33,20 +35,30 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="60dp"
+        android:layout_height="55dp"
         android:orientation="horizontal"
         android:layout_alignParentBottom="true"
         android:id="@+id/chat_layout"
         android:layout_marginLeft="5dp"
         android:layout_marginRight="5dp">
 
+        <ImageButton
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:background="@drawable/camera"
+            android:layout_gravity="center_vertical"
+            android:layout_marginRight="8dp"
+            android:layout_marginLeft="5dp"
+            android:id="@+id/chat_camera"/>
+
         <EditText
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:id="@+id/chat_edit_text"
-            android:hint="@string/enter_your_message_here"
-            android:layout_gravity="center_vertical"/>
+            android:hint="Enter your message here"
+            android:layout_gravity="center_vertical"
+            />
         
         <ImageButton
             android:layout_width="38dp"
@@ -54,8 +66,7 @@
             android:id="@+id/chat_sent_button"
             android:background="@drawable/send"
             android:layout_marginRight="5dp"
-            android:layout_gravity="center_vertical"
-            android:layout_marginEnd="5dp" />
+            android:layout_gravity="center_vertical"/>
     </LinearLayout>
 
 </RelativeLayout>

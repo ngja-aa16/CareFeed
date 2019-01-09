@@ -34,37 +34,25 @@
             android:name=".RegisterActivity"
             android:parentActivityName=".LoginActivity"
             android:screenOrientation="portrait">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.carefeed.android.carefeed.LoginActivity" />
         </activity>
         <activity
             android:name=".PasswordRecoveryActivity"
             android:parentActivityName=".LoginActivity"
             android:screenOrientation="portrait">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.carefeed.android.carefeed.LoginActivity" />
         </activity>
         <activity
             android:name=".ProfileActivity"
             android:parentActivityName=".MainActivity"
             android:screenOrientation="portrait">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.carefeed.android.carefeed.LoginActivity" />
         </activity>
         <activity
             android:name=".EditProfileActivity"
             android:parentActivityName=".ProfileActivity"
             android:screenOrientation="portrait">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.carefeed.android.carefeed.LoginActivity" />
         </activity>
         <activity
             android:name=".ChangePasswordActivity"
-            android:parentActivityName=".MainActivity"
+            android:parentActivityName=".SettingActivity"
             android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -92,9 +80,9 @@
             android:name=".ChatActivity"
             android:parentActivityName=".MainActivity"
             android:screenOrientation="portrait" />
-        <activity android:name=".RequestEventActivity"
+        <activity android:name=".SettingActivity"
             android:parentActivityName=".MainActivity"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait"/>
     </application>
 
 </manifest>

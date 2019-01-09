@@ -9,12 +9,4 @@
         android:icon="@drawable/setting_white"
         >
     </item>
-
-    <item
-        android:title="Logout"
-        android:id="@+id/menu_logout"
-        app:showAsAction="ifRoom"
-        android:icon="@drawable/lougot_white">
-
-    </item>
 </menu>
