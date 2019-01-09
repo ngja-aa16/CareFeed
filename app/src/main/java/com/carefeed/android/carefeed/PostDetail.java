@@ -361,6 +361,8 @@ public class PostDetail extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 currentPostRef.removeValue();
+                likeRef.child(postId).removeValue();
+                commentRef.child(postId).removeValue();
                 finish();
                 Toast.makeText(PostDetail.this, "Post has been deleted", Toast.LENGTH_SHORT).show();
             }

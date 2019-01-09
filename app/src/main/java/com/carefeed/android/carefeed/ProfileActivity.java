@@ -76,6 +76,7 @@ public class ProfileActivity extends AppCompatActivity {
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         linearLayoutManager.setStackFromEnd(true);
+        linearLayoutManager.setReverseLayout(true);
         profilePostList.setLayoutManager(linearLayoutManager);
         profilePostList.setNestedScrollingEnabled(false);
 

@@ -170,7 +170,7 @@ public class RequestEventActivity extends AppCompatActivity {
                                                 public void onComplete(@NonNull Task task) {
                                                     if(task.isSuccessful()){
                                                         finish();
-                                                        Toast.makeText(RequestEventActivity.this, "The event request is successfully uploaded to server", Toast.LENGTH_SHORT).show();
+                                                        Toast.makeText(RequestEventActivity.this, "The event request is successfully uploaded to server, please wait for admin to approve it", Toast.LENGTH_SHORT).show();
                                                     } else {
                                                         Toast.makeText(RequestEventActivity.this, "Error occured while creating post", Toast.LENGTH_SHORT).show();
                                                     }
