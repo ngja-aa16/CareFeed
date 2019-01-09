@@ -1,6 +1,7 @@
 package com.carefeed.android.carefeed;
 
 import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.annotation.NonNull;
@@ -18,6 +19,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -62,6 +64,7 @@ public class PostDetail extends AppCompatActivity {
     private int countLikes, countComments;
     private String currentUserId, postId;
     private FirebaseRecyclerAdapter<Comment, CommentViewHolder> firebaseRecyclerAdapter;
+    private InputMethodManager imm;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -81,6 +84,8 @@ public class PostDetail extends AppCompatActivity {
         sendCommentButton = (ImageView) findViewById(R.id.post_detail_comment_button);
         commentText = (EditText) findViewById(R.id.post_detail_comment_text);
         commentList = (RecyclerView) findViewById(R.id.post_detail_comment_list);
+
+        imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         linearLayoutManager.setStackFromEnd(true);
@@ -260,6 +265,8 @@ public class PostDetail extends AppCompatActivity {
 
         commentList.setAdapter(firebaseRecyclerAdapter);
         firebaseRecyclerAdapter.startListening();
+
+        commentText.requestFocus();
     }
 
     @Override
@@ -462,6 +469,7 @@ public class PostDetail extends AppCompatActivity {
                     } else {
                         Toast.makeText(PostDetail.this, "Error occured, please try again", Toast.LENGTH_SHORT).show();
                     }
+                    imm.hideSoftInputFromWindow(commentText.getWindowToken(), 0);
                 }
             });
         }

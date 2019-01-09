@@ -15,7 +15,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Create profile"
+            android:text="@string/create_profile"
             android:textSize="25sp"
             android:textColor="@color/black"
             android:gravity="center_horizontal"
@@ -54,7 +54,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="number"
-                android:hint="Age"
+                android:hint="@string/age"
                 android:id="@+id/cProfile_age"
                 />
         </android.support.design.widget.TextInputLayout>
@@ -69,7 +69,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="text"
-                android:hint="Introduction"
+                android:hint="@string/introduction"
                 android:id="@+id/cProfile_intro"
                 />
         </android.support.design.widget.TextInputLayout>

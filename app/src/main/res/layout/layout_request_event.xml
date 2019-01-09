@@ -8,7 +8,7 @@
 
     <include
         android:id="@+id/create_event_page_toolbar"
-        layout="@layout/app_bar_layout"></include>
+        layout="@layout/app_bar_layout"/>
 
     <ImageButton
         android:id="@+id/create_event_upload_image_button"
@@ -36,7 +36,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/SplitLine_hor1"
-        android:hint="Title"
+        android:hint="@string/title"
         android:layout_marginLeft="15dp"
         android:layout_marginRight="15dp"
         android:paddingBottom="10dp"
@@ -50,9 +50,10 @@
         android:layout_marginTop="15dp"
         android:layout_marginLeft="15dp"
         android:layout_marginRight="15dp"
-        android:hint="Write description about the post..."
+        android:hint="@string/write_description_about_the_post"
         android:inputType="textMultiLine"
-        android:background="@android:color/transparent"/>
+        android:background="@android:color/transparent"
+        tools:ignore="HardcodedText" />
 
     <ProgressBar
         android:layout_width="100dp"

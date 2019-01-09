@@ -18,7 +18,9 @@
         android:id="@+id/user_linear_layout"
         android:layout_marginTop="10dp"
         android:paddingLeft="8dp"
-        android:layout_marginRight="8dp">
+        android:layout_marginRight="8dp"
+        android:paddingStart="8dp"
+        android:layout_marginEnd="8dp">
 
         <ImageView
             android:layout_width="wrap_content"
@@ -30,17 +32,15 @@
             android:id="@+id/txt_search_user"
             android:layout_width="match_parent"
             android:layout_height="48dp"
-            android:hint="Search..."
+            android:hint="@string/search"
             android:inputType="text"
-            android:padding="8dp"
-            android:layout_toRightOf="@+id/icon_search"
-            android:layout_below="@+id/appBarId"/>
+            android:padding="8dp" />
     </LinearLayout>
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="No result found"
+        android:text="@string/no_result_found"
         android:textSize="18sp"
         android:textColor="@color/grey"
         android:layout_below="@id/user_linear_layout"
@@ -55,7 +55,7 @@
         android:layout_marginTop="12dp"
         android:paddingLeft="8dp"
         android:id="@+id/recycler_friend"
-        >
+        android:paddingStart="8dp">
 
     </android.support.v7.widget.RecyclerView>
 

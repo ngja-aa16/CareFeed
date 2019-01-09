@@ -86,7 +86,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp"
             android:layout_marginBottom="15dp"
-            android:text="or login with"
+            android:text="@string/or_login_with"
             android:gravity="center"/>
     </LinearLayout>
 

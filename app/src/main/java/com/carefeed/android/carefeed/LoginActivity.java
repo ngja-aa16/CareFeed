@@ -1,11 +1,9 @@
 package com.carefeed.android.carefeed;
 
 import android.content.Intent;
-import android.media.Image;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -34,7 +32,6 @@ public class LoginActivity extends AppCompatActivity {
     private GoogleApiClient mGoogleSignInClient;
 
     private FirebaseAuth mAuth;
-    private ImageView googleSignInImage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,7 +41,7 @@ public class LoginActivity extends AppCompatActivity {
         mProgressBar = (ProgressBar) findViewById(R.id.login_progress_bar);
         mEmail = (EditText) findViewById(R.id.login_email);
         mPassword = (EditText) findViewById(R.id.login_password);
-        googleSignInImage = (ImageView) findViewById(R.id.google_sign_in_image);
+        ImageView googleSignInImage = (ImageView) findViewById(R.id.google_sign_in_image);
         mAuth = FirebaseAuth.getInstance();
 
         mProgressBar.setVisibility(View.GONE);

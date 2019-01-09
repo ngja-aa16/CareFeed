@@ -8,7 +8,7 @@
 
     <include
         android:id="@+id/create_post_page_toolbar"
-        layout="@layout/app_bar_layout"></include>
+        layout="@layout/app_bar_layout"/>
 
 
     <ImageButton
@@ -41,7 +41,7 @@
         android:layout_below="@id/SplitLine_hor1"
         android:layout_marginLeft="15dp"
         android:layout_marginRight="15dp"
-        android:hint="Write description about the post..."
+        android:hint="@string/write_description_about_the_post"
         android:inputType="textMultiLine"
         android:background="@android:color/transparent"/>
 
