@@ -1,20 +1,25 @@
 package com.carefeed.android.carefeed;
 
 
+import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
@@ -120,17 +125,40 @@ public class HomeFragment extends Fragment {
                                 holder.joinButton.setOnClickListener(new View.OnClickListener() {
                                     @Override
                                     public void onClick(View v) {
-                                        joinRef.addValueEventListener(new ValueEventListener() {
-                                            @Override
-                                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                                joinRef.child(eventIDs).child(currentUserId).setValue("true");
-                                            }
+                                        AlertDialog.Builder confirmationDialogBuilder = new AlertDialog.Builder(getContext(), R.style.AlertDialog);
 
+                                        confirmationDialogBuilder.setTitle("Confirmation");
+                                        confirmationDialogBuilder.setMessage("Are you sure to join this event? This action cannot be undo");
+                                        confirmationDialogBuilder.setPositiveButton("Join", new DialogInterface.OnClickListener() {
                                             @Override
-                                            public void onCancelled(@NonNull DatabaseError databaseError) {
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                joinRef.addValueEventListener(new ValueEventListener() {
+                                                    @Override
+                                                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                                        joinRef.child(eventIDs).child(currentUserId).setValue("true");
+                                                        Toast.makeText(getContext(), "Successfully joined event", Toast.LENGTH_SHORT).show();
+                                                    }
 
+                                                    @Override
+                                                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                                    }
+                                                });
                                             }
                                         });
+                                        confirmationDialogBuilder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                Toast.makeText(getContext(), "Cancelled", Toast.LENGTH_SHORT).show();
+                                            }
+                                        });
+                                        confirmationDialogBuilder.setIcon(android.R.drawable.ic_dialog_alert);
+
+                                        int width = (int)(getResources().getDisplayMetrics().widthPixels*0.90);
+
+                                        Dialog confirmationDialog = confirmationDialogBuilder.create();
+                                        confirmationDialog.show();
+                                        confirmationDialog.getWindow().setLayout(width, WindowManager.LayoutParams.WRAP_CONTENT);
                                     }
                                 });
                             }
