@@ -208,10 +208,7 @@ public class FriendFragment extends Fragment {
                         if(dataSnapshot.exists()){
                             Log.d("DisplayFriends", "Snapshot Exist");
                             final String username = dataSnapshot.child("username").getValue().toString();
-                            final String profileImage = dataSnapshot.child("profile_image").getValue().toString();
                             final String uid = dataSnapshot.getKey();
-
-
 
                             mNoFriend.setVisibility(View.GONE);
                             holder.mChat.setVisibility(View.VISIBLE);
@@ -221,11 +218,10 @@ public class FriendFragment extends Fragment {
                                     Intent chatIntent = new Intent(getContext(), ChatActivity.class);
                                     chatIntent.putExtra("target_user_id", uid);
                                     chatIntent.putExtra("username", username);
-                                    if(profileImage != null)
-                                        chatIntent.putExtra("profileImage", profileImage);
+                                    if(dataSnapshot.hasChild("profile_image"))
+                                        chatIntent.putExtra("profileImage", dataSnapshot.child("profile_image").getValue().toString());
                                     else
                                         chatIntent.putExtra("profileImage", "");
-                                    Log.d("ChatUser", "" + uid + username + profileImage);
                                     startActivity(chatIntent);
                                 }
                             });
@@ -234,7 +230,7 @@ public class FriendFragment extends Fragment {
                             holder.date.setText("Friends Since : "+ model.getDate());
                             holder.username.setText(username);
                             if(dataSnapshot.hasChild("profile_image"))
-                                Picasso.get().load(profileImage).into(holder.profileImage);
+                                Picasso.get().load(dataSnapshot.child("profile_image").getValue().toString()).into(holder.profileImage);
 
                             holder.itemView.setOnClickListener(new View.OnClickListener() {
                                 @Override
@@ -245,8 +241,8 @@ public class FriendFragment extends Fragment {
                                     intent.putExtra("username", username);
                                     intent.putExtra("age", dataSnapshot.child("age").getValue().toString());
                                     intent.putExtra("introduction", dataSnapshot.child("introduction").getValue().toString());
-                                    if(profileImage != null)
-                                        intent.putExtra("profileImage", profileImage);
+                                    if(dataSnapshot.hasChild("profile_image"))
+                                        intent.putExtra("profileImage", dataSnapshot.child("profile_image").getValue().toString());
                                     else
                                         intent.putExtra("profileImage", "");
 
