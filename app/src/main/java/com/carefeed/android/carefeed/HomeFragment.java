@@ -135,8 +135,14 @@ public class HomeFragment extends Fragment {
                                                 joinRef.addValueEventListener(new ValueEventListener() {
                                                     @Override
                                                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                                        joinRef.child(eventIDs).child(currentUserId).setValue("true");
-                                                        Toast.makeText(getContext(), "Successfully joined event", Toast.LENGTH_SHORT).show();
+                                                        if(dataSnapshot.child(eventIDs).child(currentUserId).exists()){
+                                                            holder.joinButton.setEnabled(false);
+                                                        }
+                                                        else {
+                                                            joinRef.child(eventIDs).child(currentUserId).setValue("true");
+                                                            Toast.makeText(getContext(), "Successfully joined event", Toast.LENGTH_SHORT).show();
+                                                            holder.joinButton.setEnabled(false);
+                                                        }
                                                     }
 
                                                     @Override
@@ -213,12 +219,12 @@ public class HomeFragment extends Fragment {
                     if(dataSnapshot.child(eventId).hasChild(currentUserId)){
                         joinCount = (int) dataSnapshot.child(eventId).getChildrenCount();
                         joinButton.setText("Joined");
-                        joinButton.setClickable(false);
+                        joinButton.setEnabled(false);
                         joinedCounts.setText(Integer.toString(joinCount));
                     } else {
                         joinCount = (int) dataSnapshot.child(eventId).getChildrenCount();
                         joinButton.setText("Join");
-                        joinButton.setClickable(true);
+                        joinButton.setEnabled(true);
                         joinedCounts.setText(Integer.toString(joinCount));
                     }
                 }
