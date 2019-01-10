@@ -447,12 +447,12 @@ public class PostDetail extends AppCompatActivity {
         if(TextUtils.isEmpty(comment)){
             Toast.makeText(this, "Please input some comment...", Toast.LENGTH_SHORT).show();
         } else {
-            Calendar calDate = Calendar.getInstance(Locale.ENGLISH);
-            SimpleDateFormat currentDate = new SimpleDateFormat("dd-MMM-yyyy");
+            Calendar calDate = Calendar.getInstance();
+            SimpleDateFormat currentDate = new SimpleDateFormat("dd-MMM-yyyy", Locale.ENGLISH);
             final String currentDateString = currentDate.format(calDate.getTime());
 
-            Calendar calTime = Calendar.getInstance(Locale.ENGLISH);
-            SimpleDateFormat currentTime = new SimpleDateFormat("HH:mm");
+            Calendar calTime = Calendar.getInstance();
+            SimpleDateFormat currentTime = new SimpleDateFormat("HH:mm", Locale.ENGLISH);
             final String currentTimeString = currentTime.format(calTime.getTime());
 
             HashMap commentsMap = new HashMap();
