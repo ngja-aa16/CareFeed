@@ -11,6 +11,7 @@ import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
@@ -102,6 +103,8 @@ public class CreatePostActivity extends AppCompatActivity {
             Toast.makeText(this, "Please insert a description for the post", Toast.LENGTH_SHORT).show();
         } else {
             progressBar.setVisibility(View.VISIBLE);
+            getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+                    WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
             StoreImageToFirebase();
         }
     }
@@ -154,6 +157,7 @@ public class CreatePostActivity extends AppCompatActivity {
                         @Override
                         public void onComplete(@NonNull Task task) {
                             if(task.isSuccessful()){
+                                getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
                                 finish();
                                 Toast.makeText(CreatePostActivity.this, "The post is successfully created", Toast.LENGTH_SHORT).show();
                             } else {

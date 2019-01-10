@@ -11,6 +11,7 @@ import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
@@ -128,6 +129,8 @@ public class RequestEventActivity extends AppCompatActivity {
             Toast.makeText(this, "Please insert a description for the event", Toast.LENGTH_SHORT).show();
         } else {
             loadingBar.setVisibility(View.VISIBLE);
+            getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+                    WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
 
             Calendar calDate = Calendar.getInstance();
             SimpleDateFormat currentDate = new SimpleDateFormat("dd-MMM-yyyy", Locale.ENGLISH);
@@ -169,6 +172,7 @@ public class RequestEventActivity extends AppCompatActivity {
                                                 @Override
                                                 public void onComplete(@NonNull Task task) {
                                                     if(task.isSuccessful()){
+                                                        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
                                                         finish();
                                                         Toast.makeText(RequestEventActivity.this, "The event request is successfully uploaded to server, please wait for admin to approve it", Toast.LENGTH_SHORT).show();
                                                     } else {

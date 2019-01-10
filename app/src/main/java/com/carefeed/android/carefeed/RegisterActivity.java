@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
@@ -156,12 +157,15 @@ public class RegisterActivity extends AppCompatActivity {
 
                 if(checkValid(email, password, confirmPassword)) {
                     mProgressBar.setVisibility(View.VISIBLE);
+                    getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+                            WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
                     mAuth.createUserWithEmailAndPassword(email, password)
                             .addOnCompleteListener(RegisterActivity.this, new OnCompleteListener<AuthResult>() {
                                 @Override
                                 public void onComplete(@NonNull Task<AuthResult> task) {
                                     if (task.isSuccessful()) {
                                         // Register success, update UI with the signed-in user's information
+                                        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
                                         FirebaseUser user = mAuth.getCurrentUser();
                                         Toast.makeText(RegisterActivity.this, "Register successful.",
                                                 Toast.LENGTH_SHORT).show();
@@ -172,6 +176,7 @@ public class RegisterActivity extends AppCompatActivity {
                                         startActivity(intent);
                                     } else {
                                         // If register fails, display a message to the user.
+                                        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
                                         Toast.makeText(RegisterActivity.this, "Email has been registered.",
                                                 Toast.LENGTH_SHORT).show();
                                         mProgressBar.setVisibility(View.GONE);
