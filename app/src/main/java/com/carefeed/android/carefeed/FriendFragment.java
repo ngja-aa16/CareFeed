@@ -124,11 +124,10 @@ public class FriendFragment extends Fragment {
                                     public void onDataChange(@NonNull final DataSnapshot dataSnapshot) {
                                         Log.d("DisplayFriendRequests", "Snapshot Exist");
                                         final String username = dataSnapshot.child("username").getValue().toString();
-                                        final String profileImage = dataSnapshot.child("profile_image").getValue().toString();
 
                                         holder.request_username.setText(username);
                                         if (dataSnapshot.hasChild("profile_image"))
-                                            Picasso.get().load(profileImage).into(holder.request_profileImage);
+                                            Picasso.get().load(dataSnapshot.child("profile_image").getValue().toString()).into(holder.request_profileImage);
 
                                         holder.mView.setOnClickListener(new View.OnClickListener() {
                                             @Override
@@ -143,8 +142,8 @@ public class FriendFragment extends Fragment {
                                                 intent.putExtra("username", username);
                                                 intent.putExtra("age", dataSnapshot.child("age").getValue().toString());
                                                 intent.putExtra("introduction", dataSnapshot.child("introduction").getValue().toString());
-                                                if (profileImage != null)
-                                                    intent.putExtra("profileImage", profileImage);
+                                                if (dataSnapshot.hasChild("profile_image"))
+                                                    intent.putExtra("profileImage", dataSnapshot.child("profile_image").getValue().toString());
                                                 else
                                                     intent.putExtra("profileImage", "");
 
